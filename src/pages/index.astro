@@ -1,16 +1,809 @@
 ---
+// src/pages/index.astro
+const title = "Vagabond Reader";
 
+const chapters = [
+  {
+    number: 1,
+    title: "The Sword",
+    description: "Musashi begins his journey as a young warrior.",
+  },
+  {
+    number: 2,
+    title: "First Blood",
+    description: "A fateful encounter tests Musashi's resolve.",
+  },
+  {
+    number: 3,
+    title: "The Road",
+    description: "Musashi embarks on a wandering journey.",
+  },
+  {
+    number: 4,
+    title: "A Duel",
+    description: "Musashi faces a rival swordsman.",
+  },
+  {
+    number: 5,
+    title: "The Master",
+    description: "Musashi seeks training from a sensei.",
+  },
+  {
+    number: 6,
+    title: "Growing Pains",
+    description: "Training takes its toll on mind and body.",
+  },
+  {
+    number: 7,
+    title: "Discipline",
+    description: "Musashi learns the importance of discipline.",
+  },
+  {
+    number: 8,
+    title: "The Dojo",
+    description: "Musashi trains at a renowned dojo.",
+  },
+  {
+    number: 9,
+    title: "Victory",
+    description: "Musashi's first major victory.",
+  },
+  {
+    number: 10,
+    title: "Recognition",
+    description: "Musashi's name spreads across the land.",
+  },
+  {
+    number: 11,
+    title: "The Challenge",
+    description: "A powerful warrior challenges Musashi.",
+  },
+  {
+    number: 12,
+    title: "Preparation",
+    description: "Musashi prepares for the coming battle.",
+  },
+  {
+    number: 13,
+    title: "The Battle",
+    description: "An intense duel determines Musashi's future.",
+  },
+  {
+    number: 14,
+    title: "After Victory",
+    description: "Musashi reflects on his triumph.",
+  },
+  {
+    number: 15,
+    title: "Redemption",
+    description: "Musashi seeks to atone for past mistakes.",
+  },
+  {
+    number: 16,
+    title: "The Wanderer",
+    description: "Musashi continues as a lone swordsman.",
+  },
+  {
+    number: 17,
+    title: "A Village",
+    description: "Musashi finds refuge in a quiet village.",
+  },
+  {
+    number: 18,
+    title: "Connection",
+    description: "Musashi forms an unexpected bond.",
+  },
+  {
+    number: 19,
+    title: "The Past",
+    description: "Musashi's dark past catches up with him.",
+  },
+  {
+    number: 20,
+    title: "Departure",
+    description: "Musashi must leave the village.",
+  },
+  {
+    number: 21,
+    title: "Mountains",
+    description: "Musashi seeks solitude in the mountains.",
+  },
+  {
+    number: 22,
+    title: "Meditation",
+    description: "Deep meditation reveals new insights.",
+  },
+  {
+    number: 23,
+    title: "Enlightenment",
+    description: "A moment of clarity transforms Musashi.",
+  },
+  {
+    number: 24,
+    title: "Return",
+    description: "Musashi descends from the mountains changed.",
+  },
+  {
+    number: 25,
+    title: "New Strength",
+    description: "Musashi demonstrates unprecedented skill.",
+  },
+  {
+    number: 26,
+    title: "The Enemy",
+    description: "An old enemy emerges from his past.",
+  },
+  {
+    number: 27,
+    title: "Confrontation",
+    description: "Musashi faces his nemesis at last.",
+  },
+  {
+    number: 28,
+    title: "Mercy",
+    description: "Musashi chooses a path beyond violence.",
+  },
+  {
+    number: 29,
+    title: "Legacy",
+    description: "Musashi's actions shape the future.",
+  },
+  {
+    number: 30,
+    title: "Serenity",
+    description: "Musashi finally finds inner peace.",
+  },
+  {
+    number: 31,
+    title: "Harmony",
+    description: "Musashi's mastery extends beyond the sword.",
+  },
+  { number: 32, title: "Art", description: "Musashi explores art and combat." },
+  {
+    number: 33,
+    title: "Philosophy",
+    description: "Musashi contemplates existence.",
+  },
+  {
+    number: 34,
+    title: "Teaching",
+    description: "Musashi shares his knowledge with others.",
+  },
+  {
+    number: 35,
+    title: "Disciples",
+    description: "Musashi takes on talented students.",
+  },
+  {
+    number: 36,
+    title: "The Young Warrior",
+    description: "A promising fighter seeks Musashi's guidance.",
+  },
+  {
+    number: 37,
+    title: "Training",
+    description: "Musashi puts his student through rigorous training.",
+  },
+  {
+    number: 38,
+    title: "Trial",
+    description: "The student faces their first true test.",
+  },
+  {
+    number: 39,
+    title: "Growth",
+    description: "The student understands Musashi's teachings.",
+  },
+  {
+    number: 40,
+    title: "Journey Together",
+    description: "Master and student travel side by side.",
+  },
+  {
+    number: 41,
+    title: "Conflict",
+    description: "Master and student's philosophies clash.",
+  },
+  {
+    number: 42,
+    title: "Separation",
+    description: "The student must forge their own path.",
+  },
+  {
+    number: 43,
+    title: "Solitude",
+    description: "Musashi returns to his wandering.",
+  },
+  {
+    number: 44,
+    title: "Memory",
+    description: "Musashi remembers those from his past.",
+  },
+  {
+    number: 45,
+    title: "The Temple",
+    description: "Musashi seeks refuge in a sacred temple.",
+  },
+  {
+    number: 46,
+    title: "Wisdom",
+    description: "Monks share ancient teachings with Musashi.",
+  },
+  {
+    number: 47,
+    title: "Doubt",
+    description: "Musashi questions everything he learned.",
+  },
+  {
+    number: 48,
+    title: "Crisis",
+    description: "Musashi faces a spiritual crisis.",
+  },
+  {
+    number: 49,
+    title: "Descent",
+    description: "Musashi's mind and spirit unravel.",
+  },
+  {
+    number: 50,
+    title: "Exile",
+    description: "Musashi faces consequences of his past.",
+  },
+  {
+    number: 51,
+    title: "Darkness",
+    description: "Musashi descends into darkness.",
+  },
+  {
+    number: 52,
+    title: "Rock Bottom",
+    description: "Musashi reaches his lowest point.",
+  },
+  {
+    number: 53,
+    title: "The Light",
+    description: "Hope appears in Musashi's darkness.",
+  },
+  {
+    number: 54,
+    title: "Awakening",
+    description: "Musashi rises from his despair.",
+  },
+  {
+    number: 55,
+    title: "Rebirth",
+    description: "Musashi is born anew from his ashes.",
+  },
+  {
+    number: 56,
+    title: "Healing",
+    description: "Musashi begins the process of healing.",
+  },
+  {
+    number: 57,
+    title: "Strength",
+    description: "Musashi regains his strength.",
+  },
+  {
+    number: 58,
+    title: "Purpose",
+    description: "Musashi discovers his new purpose.",
+  },
+  {
+    number: 59,
+    title: "The Way",
+    description: "Musashi walks a new path forward.",
+  },
+  {
+    number: 60,
+    title: "Destiny",
+    description: "Musashi's path and destiny converge.",
+  },
+  {
+    number: 61,
+    title: "The Town",
+    description: "Musashi arrives in a bustling town.",
+  },
+  {
+    number: 62,
+    title: "Society",
+    description: "Musashi navigates society's complexities.",
+  },
+  {
+    number: 63,
+    title: "Conflict",
+    description: "Musashi clashes with powerful forces.",
+  },
+  {
+    number: 64,
+    title: "Alliance",
+    description: "Musashi forms unexpected alliances.",
+  },
+  {
+    number: 65,
+    title: "Battle",
+    description: "A grand battle tests Musashi's resolve.",
+  },
+  {
+    number: 66,
+    title: "Victory",
+    description: "Musashi emerges victorious but changed.",
+  },
+  {
+    number: 67,
+    title: "Consequence",
+    description: "Musashi faces the consequences of his actions.",
+  },
+  {
+    number: 68,
+    title: "Regret",
+    description: "Musashi wrestles with regret and remorse.",
+  },
+  {
+    number: 69,
+    title: "Acceptance",
+    description: "Musashi learns to accept his past.",
+  },
+  {
+    number: 70,
+    title: "Peace",
+    description: "Musashi finally finds peace within.",
+  },
+  {
+    number: 71,
+    title: "The Ocean",
+    description: "Musashi visits the vast ocean.",
+  },
+  {
+    number: 72,
+    title: "Reflection",
+    description: "Musashi reflects on his entire journey.",
+  },
+  {
+    number: 73,
+    title: "Gratitude",
+    description: "Musashi expresses gratitude for all.",
+  },
+  {
+    number: 74,
+    title: "Connection",
+    description: "Musashi reconnects with his past.",
+  },
+  {
+    number: 75,
+    title: "Forgiveness",
+    description: "Musashi seeks and grants forgiveness.",
+  },
+  {
+    number: 76,
+    title: "Legacy",
+    description: "Musashi contemplates his legacy.",
+  },
+  {
+    number: 77,
+    title: "The Scroll",
+    description: "Musashi writes his teachings and philosophy.",
+  },
+  {
+    number: 78,
+    title: "Words",
+    description: "Musashi's written wisdom comes to life.",
+  },
+  {
+    number: 79,
+    title: "Transmission",
+    description: "Musashi passes knowledge to others.",
+  },
+  {
+    number: 80,
+    title: "The Next",
+    description: "A new warrior begins their journey.",
+  },
+  {
+    number: 81,
+    title: "Spring",
+    description: "Musashi enjoys the beauty of spring.",
+  },
+  {
+    number: 82,
+    title: "Growth",
+    description: "New life sprouts around Musashi.",
+  },
+  {
+    number: 83,
+    title: "Summer",
+    description: "Musashi experiences the heat of summer.",
+  },
+  {
+    number: 84,
+    title: "Intensity",
+    description: "Life reaches its peak intensity.",
+  },
+  {
+    number: 85,
+    title: "Autumn",
+    description: "Musashi witnesses the fall of leaves.",
+  },
+  { number: 86, title: "Letting Go", description: "Musashi learns to let go." },
+  {
+    number: 87,
+    title: "Winter",
+    description: "Musashi faces the harshness of winter.",
+  },
+  {
+    number: 88,
+    title: "Stillness",
+    description: "Everything becomes quiet and still.",
+  },
+  {
+    number: 89,
+    title: "Eternity",
+    description: "Musashi touches the infinite.",
+  },
+  {
+    number: 90,
+    title: "The Circle",
+    description: "The journey completes its circle.",
+  },
+  {
+    number: 91,
+    title: "Echoes",
+    description: "Musashi hears echoes of past and future.",
+  },
+  {
+    number: 92,
+    title: "Convergence",
+    description: "All paths converge toward a final moment.",
+  },
+  {
+    number: 93,
+    title: "Clarity",
+    description: "Perfect clarity emerges from Musashi.",
+  },
+  {
+    number: 94,
+    title: "The Duel",
+    description: "Musashi's greatest duel awaits.",
+  },
+  {
+    number: 95,
+    title: "Perfection",
+    description: "Musashi achieves perfect technique.",
+  },
+  {
+    number: 96,
+    title: "Transcendence",
+    description: "Musashi transcends mortal combat.",
+  },
+  {
+    number: 97,
+    title: "Beyond",
+    description: "Musashi goes beyond imagination.",
+  },
+  {
+    number: 98,
+    title: "Eternity",
+    description: "Musashi becomes one with eternity.",
+  },
+  { number: 99, title: "The End", description: "Everything draws to a close." },
+  {
+    number: 100,
+    title: "Enlightenment",
+    description: "Musashi achieves spiritual awakening and mastery.",
+  },
+];
 ---
 
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Read Vagabond Like Never Before</title>
+    <meta
+      name="description"
+      content="A minimalist, high-quality manga reader landing page built with Astro."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      :root {
+        --bg: #ffffff;
+        --fg: #0b0b0c;
+        --muted: #6b7280;
+        --accent: #374151;
+        --card: #f9fafb;
+        --border: #e5e7eb;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          sans-serif;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .logo {
+        font-weight: 700;
+        letter-spacing: 0.4px;
+      }
+      .cta {
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: var(--fg);
+        color: var(--bg);
+        font-weight: 600;
+      }
+      .hero {
+        padding: 96px 0 64px;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 40px;
+      }
+      @media (max-width: 900px) {
+        .hero {
+          grid-template-columns: 1fr;
+          padding-top: 64px;
+        }
+      }
+      h1 {
+        font-size: clamp(36px, 6vw, 64px);
+        line-height: 1.05;
+        margin: 0 0 16px;
+      }
+      p.lead {
+        color: var(--muted);
+        font-size: 18px;
+        max-width: 52ch;
+      }
+      .hero-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 28px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--card);
+      }
+      .btn.primary {
+        background: var(--fg);
+        color: var(--bg);
+        border-color: transparent;
+        font-weight: 600;
+      }
+      .mock {
+        background: linear-gradient(180deg, #f3f4f6, #eff6ff);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px;
+      }
+      .page {
+        background: #ffffff;
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        padding: 18px;
+        color: #374151;
+      }
+      .page + .page {
+        margin-top: 10px;
+      }
+      section {
+        padding: 64px 0;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 20px;
+      }
+      .card h3 {
+        margin-top: 0;
+      }
+      .red-logo {
+        filter: brightness(0) saturate(100%) invert(28%) sepia(100%)
+          saturate(10000%) hue-rotate(1deg);
+      }
+      .chapters-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .chapter-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
+        background: var(--card);
+        margin-bottom: 8px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        text-decoration: none;
+      }
+      .chapter-item:hover {
+        background-color: #efefef;
+        transform: translateX(4px);
+      }
+      .chapter-info {
+        flex: 1;
+      }
+      .chapter-number {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+      }
+      .chapter-title {
+        font-weight: 600;
+        color: var(--fg);
+        font-size: 15px;
+      }
+      .chapter-desc {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      .read-btn {
+        padding: 8px 14px;
+        background: var(--fg);
+        color: var(--bg);
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 13px;
+        white-space: nowrap;
+        margin-left: 16px;
+        transition: background 0.2s;
+      }
+      .read-btn:hover {
+        opacity: 0.9;
+      }
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 32px 0;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="container">
+      <div class="logo">{title}</div>
+      <a class="cta" href="#get-started">Get Started</a>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <div>
+          <h1>Read Takehiko Inoue's masterpiece Vagabond like never before.</h1>
+          <p class="lead">
+            Upscaled pages for a high-quality reading experience. Free and
+            ad-free. Forever.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#chapters">Start Reading →</a>
+            <a class="btn" href="#donate">Donate</a>
+          </div>
+        </div>
+        <img src="/Musashi_Eating.jpg" alt="Musashi Eating" width="500" />
+
+        <!--
+		<div class="mock">
+          <div class="page">Vagabond — Chapter 1</div>
+          <div class="page">
+            Full-width pages · Keyboard navigation · Zero clutter
+          </div>
+          <div class="page">Progress saved locally</div>
+        </div>
+		 -->
+      </section>
+
+      <section id="chapters">
+        <h2 style="text-align: center; margin-bottom: 12px;">Chapters</h2>
+        <p
+          style="text-align: center; color: var(--muted); margin-bottom: 32px; font-size: 14px;"
+        >
+          10 volumes • 100 chapters
+        </p>
+        <ol class="chapters-list">
+          {
+            chapters.map((chapter) => (
+              <li>
+                <a class="chapter-item" href="#">
+                  <div class="chapter-info">
+                    <div class="chapter-number">Ch. {chapter.number}</div>
+                    <div class="chapter-title">{chapter.title}</div>
+                    <div class="chapter-desc">{chapter.description}</div>
+                  </div>
+                  <span class="read-btn">Read</span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      <section id="donate">
+        <div class="card">
+          <h3>Support This Project</h3>
+          <p>
+            If you enjoy this reader and want to support its development,
+            consider buying me a coffee! Your donations help keep this project
+            high-quality, free and ad-free for everyone.
+          </p>
+          <div style="margin-top: 20px;">
+            <a
+              class="btn primary"
+              href="https://www.paypal.com/paypalme/mdnssknght"
+              target="_blank"
+              style="display: inline-block;"
+              >Donate via Paypal{" "}<i class="fab fa-paypal"></i>
+            </a>
+            <a
+              class="btn"
+              href="https://buymeacoffee.com/crydafan"
+              target="_blank"
+              style="display: inline-block; margin-left: 12px;"
+              >Buy Me a Coffee{" "}<i class="fa fa-coffee"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        Made with ❤️ by Leonardo. For Vagabond fans, by a Vagabond fan.
+      </div>
+    </footer>
+  </body>
 </html>

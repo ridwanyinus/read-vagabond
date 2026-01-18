@@ -1,4 +1,3 @@
-BEGIN TRANSACTION;
 INSERT INTO chapters (number,title,description,volume,release_date,page_count,created_at) VALUES (1,'Shinmen Takezo',NULL,1,'1999-03-23',NULL,'2026-01-18');
 INSERT INTO chapters (number,title,description,volume,release_date,page_count,created_at) VALUES (2,'Akemi',NULL,1,'1999-03-23',NULL,'2026-01-18');
 INSERT INTO chapters (number,title,description,volume,release_date,page_count,created_at) VALUES (3,'Oko',NULL,1,'1999-03-23',NULL,'2026-01-18');
@@ -326,4 +325,3 @@ INSERT INTO chapters (number,title,description,volume,release_date,page_count,cr
 INSERT INTO chapters (number,title,description,volume,release_date,page_count,created_at) VALUES (325,'Famous Treasure',NULL,NULL,'2015-03-19',NULL,'2026-01-18');
 INSERT INTO chapters (number,title,description,volume,release_date,page_count,created_at) VALUES (326,'To Be a Samurai',NULL,NULL,'2015-04-16',NULL,'2026-01-18');
 INSERT INTO chapters (number,title,description,volume,release_date,page_count,created_at) VALUES (327,'The One Named Tadaoki',NULL,NULL,'2015-05-21',NULL,'2026-01-18');
-COMMIT;

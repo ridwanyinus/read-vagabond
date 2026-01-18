@@ -329,5 +329,23 @@ const chapters: Array<{
         Made with ❤️ by Leonardo. For Vagabond fans, by a Vagabond fan.
       </div>
     </footer>
+
+    <script>
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          const href = anchor.getAttribute("href");
+          if (href && href !== "#") {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+              target.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }
+          }
+        });
+      });
+    </script>
   </body>
 </html>

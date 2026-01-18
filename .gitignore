@@ -12,6 +12,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# wrangler
+.wrangler/
+wrangler.toml.local
 
 # environment variables
 .env

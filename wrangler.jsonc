@@ -20,10 +20,11 @@
 			"database_id": "d0193fc5-72e8-4eaa-96d2-cb584ca4ffa2"
 		}
 	],
-	"r2_buckets": [
+	"routes": [
 		{
-			"binding": "manga",
-			"bucket_name": "manga"
+			"pattern": "readbagabondo.com",
+			"zone_name": "readbagabondo.com",
+			"custom_domain": true
 		}
 	]
 }

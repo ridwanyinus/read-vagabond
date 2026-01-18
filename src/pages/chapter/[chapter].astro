@@ -1,5 +1,4 @@
 ---
-// src/pages/chapter/[chapter].astro
 async function fetchJson<T>(endpoint: string): Promise<T> {
   const response = await fetch(`${Astro.url.origin}${endpoint}`);
   return response.json();

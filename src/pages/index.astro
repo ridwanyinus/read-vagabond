@@ -2,12 +2,15 @@
 // src/pages/index.astro
 const title = "Vagabond Reader";
 
-const response = await fetch(`${Astro.url.origin}/api/chapters`);
+const db = Astro.locals.runtime?.env?.vagabond_db;
 const chapters: Array<{
   number: number;
   title: string;
   description: string;
-}> = await response.json();
+}> = db
+  ? (await db.prepare("SELECT * FROM chapters ORDER BY number ASC").all())
+      .results
+  : [];
 ---
 
 <!doctype html>

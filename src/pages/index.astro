@@ -1,13 +1,21 @@
 ---
 // src/pages/index.astro
+async function fetchJson(endpoint: string) {
+  const response = await fetch(`${Astro.url.origin}${endpoint}`);
+  return response.json();
+}
 const title = "Vagabond Reader";
 
-const response = await fetch(`${Astro.url.origin}/api/chapters`);
+const metadata: {
+  tankobon: number;
+  chapters: number;
+} = await fetchJson("/api/metadata");
+
 const chapters: Array<{
   number: number;
   title: string;
   description: string;
-}> = await response.json();
+}> = await fetchJson("/api/chapters");
 ---
 
 <!doctype html>
@@ -268,7 +276,7 @@ const chapters: Array<{
         <p
           style="text-align: center; color: var(--muted); margin-bottom: 32px; font-size: 14px;"
         >
-          10 volumes • 100 chapters
+          {metadata.tankobon} volumes • {metadata.chapters} chapters
         </p>
         <ol class="chapters-list">
           {

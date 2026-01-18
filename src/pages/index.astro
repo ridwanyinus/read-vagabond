@@ -237,6 +237,116 @@ const chapters: Array<{
         padding: 32px 0;
         color: var(--muted);
       }
+
+      /* Mobile Responsiveness */
+      @media (max-width: 768px) {
+        .container {
+          padding: 16px;
+        }
+
+        header {
+          flex-wrap: wrap;
+          gap: 12px;
+        }
+
+        .logo {
+          font-size: 16px;
+        }
+
+        .cta {
+          padding: 8px 12px;
+          font-size: 14px;
+        }
+
+        .hero {
+          padding: 48px 0 32px;
+          gap: 24px;
+        }
+
+        .hero img {
+          width: 100%;
+          max-width: 400px;
+          margin: 0 auto;
+        }
+
+        h1 {
+          font-size: clamp(28px, 8vw, 42px);
+        }
+
+        p.lead {
+          font-size: 16px;
+        }
+
+        .hero-actions {
+          flex-direction: column;
+          width: 100%;
+        }
+
+        .btn {
+          width: 100%;
+          text-align: center;
+          justify-content: center;
+        }
+
+        section {
+          padding: 40px 0;
+        }
+
+        .chapter-item {
+          padding: 12px 16px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+
+        .chapter-item:hover {
+          transform: none;
+        }
+
+        .read-btn {
+          margin-left: 0;
+          width: 100%;
+          text-align: center;
+        }
+
+        .card {
+          padding: 16px;
+        }
+
+        .card h3 {
+          font-size: 18px;
+        }
+
+        .card > div {
+          flex-direction: column !important;
+          gap: 12px !important;
+        }
+
+        .card a.btn,
+        .card a.btn.primary {
+          width: 100%;
+          text-align: center;
+          margin-left: 0 !important;
+          display: block !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 24px;
+        }
+
+        .chapter-number,
+        .chapter-title,
+        .chapter-desc {
+          font-size: 12px;
+        }
+
+        .read-btn {
+          font-size: 12px;
+          padding: 6px 12px;
+        }
+      }
     </style>
   </head>
   <body>

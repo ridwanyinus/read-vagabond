@@ -1,33 +1,38 @@
 ---
 // src/pages/chapter/[chapter].astro
-async function fetchJson(endpoint: string) {
+async function fetchJson<T>(endpoint: string): Promise<T> {
   const response = await fetch(`${Astro.url.origin}${endpoint}`);
   return response.json();
 }
 
 const { chapter } = Astro.params;
 
-const currentChapter = await fetchJson(`/api/chapters/${chapter}`);
+const currentChapter = await fetchJson<{
+  number: number;
+  title: string;
+  page_count: number;
+}>(`/api/chapters/${chapter}`);
 if (!currentChapter) {
   return Astro.redirect("/");
 }
 
-const metadata: {
-  tankobon: number;
-  chapters: number;
-} = await fetchJson("/api/metadata");
+const metadata = await fetchJson<{ tankobon: number; chapters: number }>(
+  "/api/metadata",
+);
 
 const chapterNum = parseInt(chapter || "1");
 const prevChapter = chapterNum > 1 ? chapterNum - 1 : null;
 const nextChapter = chapterNum < metadata.chapters ? chapterNum + 1 : null;
 
-// TODO: Replace with actual page URLs from your database/storage
-const pages = [
-  "https://imgdump.xyz/Vagabond-Manga/Chapter-1/page-009.webp",
-  "https://imgdump.xyz/Vagabond-Manga/Chapter-1/page-010.webp",
-  "https://imgdump.xyz/Vagabond-Manga/Chapter-1/page-011.webp",
-  "https://imgdump.xyz/Vagabond-Manga/Chapter-1/page-012.webp",
-];
+const pages = Array.from(
+  { length: currentChapter.page_count },
+  (_, i) => i + 1,
+).map(
+  (pageNum) =>
+    `https://manga.leonardo-estacio-h.workers.dev/chapter-${currentChapter.number.toString().padStart(3, "0")}/page-${String(
+      pageNum,
+    ).padStart(3, "0")}.png`,
+);
 ---
 
 <!doctype html>

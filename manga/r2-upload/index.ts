@@ -1,10 +1,10 @@
 import { s3 } from "bun";
 
 const config = {
-  CONCURRENCY: 20,
+  CONCURRENCY: 24,
   GLOB_PATTERN: "../**/*.png",
   UPLOAD_LOG: "uploaded.json",
-  SAVE_INTERVAL: 100,
+  SAVE_INTERVAL: 200,
 } as const;
 
 let uploaded: Set<string>;
@@ -23,6 +23,7 @@ const allPaths = [...glob.scanSync()];
 console.log(`Found ${allPaths.length} files to upload.`);
 
 let uploadCount = 0;
+let savePromise: Promise<void> | null = null;
 const startTime = Date.now();
 
 async function saveLog() {
@@ -63,11 +64,9 @@ async function upload(localPath: string) {
 
     if (uploadCount % 10 === 0 || uploaded.size === allPaths.length)
       logProgress();
-    if (
-      uploadCount % config.SAVE_INTERVAL === 0 ||
-      uploaded.size === allPaths.length
-    )
-      await saveLog();
+    if (uploadCount % config.SAVE_INTERVAL === 0) {
+      savePromise = saveLog();
+    }
   } catch {
     console.error(`Failed to upload: ${key}`);
   }
@@ -85,6 +84,9 @@ async function run() {
   });
 
   await Promise.all(workers);
+
+  if (savePromise) await savePromise;
+  await saveLog();
 }
 
 await run();

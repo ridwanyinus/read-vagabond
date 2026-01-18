@@ -392,14 +392,16 @@ const chapters: Array<{
           {
             chapters.map((chapter) => (
               <li>
-                <a class="chapter-item" href="#">
+                <div class="chapter-item">
                   <div class="chapter-info">
                     <div class="chapter-number">Ch. {chapter.number}</div>
                     <div class="chapter-title">{chapter.title}</div>
                     <div class="chapter-desc">{chapter.description}</div>
                   </div>
-                  <span class="read-btn">Read</span>
-                </a>
+                  <a class="read-btn" href={`/chapter/${chapter.number}`}>
+                    Read
+                  </a>
+                </div>
               </li>
             ))
           }

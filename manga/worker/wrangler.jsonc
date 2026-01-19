@@ -12,16 +12,6 @@
 	},
 	"r2_buckets": [
 		{
-			"binding": "manga",
-			"bucket_name": "manga",
-			"remote": true,
-		},
-		{
-			"binding": "vagabond_manga_hq",
-			"bucket_name": "vagabond-manga-hq",
-			"remote": true,
-		},
-		{
 			"binding": "vagabond_manga_vizbig",
 			"bucket_name": "vagabond-manga-vizbig",
 			"remote": true,

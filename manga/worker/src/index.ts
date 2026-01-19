@@ -39,7 +39,7 @@ export default {
 		if (match_cover) {
 			const volume = match_cover[1];
 
-			const object = await env.vagabond_manga_hq.get(`volume-${volume}/cover.jpg`);
+			const object = await env.vagabond_manga_vizbig.get(`covers/volume-${volume}.jpg`);
 			if (!object) {
 				return new Response('Not Found', { status: 404 });
 			}

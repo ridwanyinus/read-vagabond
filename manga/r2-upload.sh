@@ -9,7 +9,7 @@ sync_volume() {
 
     [ -d "$volume" ] || return
 
-    aws s3 sync "$volume" "s3://vagabond-manga-hq/$volume" \
+    aws s3 sync "$volume" "s3://$BUCKET_NAME/$volume" \
         --endpoint-url "https://"$ACCOUNT_ID".r2.cloudflarestorage.com" \
         --size-only \
         --no-progress

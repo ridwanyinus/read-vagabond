@@ -6,7 +6,7 @@ async function fetchJson<T>(endpoint: string): Promise<T> {
   return response.json();
 }
 
-const { chapter } = Astro.params;
+const { volume, chapter } = Astro.params;
 
 const currentChapter = await fetchJson<{
   number: number;
@@ -30,9 +30,13 @@ const pages = Array.from(
   (_, i) => i + 1,
 ).map(
   (pageNum) =>
-    `https://manga.readbagabondo.com/chapter-${currentChapter.number.toString().padStart(3, "0")}/page-${String(
+    `${
+      import.meta.env.PROD
+        ? "https://manga.readbagabondo.com"
+        : "http://localhost:8787"
+    }/volume-${volume!.padStart(2, "0")}/chapter-${currentChapter.number.toString().padStart(3, "0")}/page-${String(
       pageNum,
-    ).padStart(3, "0")}.png`,
+    ).padStart(3, "0")}`,
 );
 ---
 

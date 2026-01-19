@@ -1,2 +1,5 @@
-chapter-*/
+# manga volume directories
+volume-*/
+
+# log files
 r2-upload/uploaded.json

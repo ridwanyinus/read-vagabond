@@ -110,7 +110,7 @@ const pages = Array.from(
           {
             prevChapter ? (
               <a
-                href={`/chapter/${prevChapter}`}
+                href={`/volume-${volume}/chapter-${prevChapter}`}
                 class="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-[11px] md:text-sm px-3 py-1.5 md:px-4 md:py-2 focus:outline-none transition-colors whitespace-nowrap"
               >
                 <span class="inline-flex items-center gap-1">
@@ -157,7 +157,7 @@ const pages = Array.from(
           {
             nextChapter ? (
               <a
-                href={`/chapter/${nextChapter}`}
+                href={`/volume-${volume}/chapter-${nextChapter}`}
                 class="text-white bg-gray-900 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-[11px] md:text-sm px-3 py-1.5 md:px-4 md:py-2 focus:outline-none transition-colors whitespace-nowrap"
               >
                 <span class="inline-flex items-center gap-1">

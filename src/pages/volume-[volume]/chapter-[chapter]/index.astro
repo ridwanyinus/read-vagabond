@@ -1,5 +1,5 @@
 ---
-import "../../styles/global.css";
+import "../../../styles/global.css";
 
 async function fetchJson<T>(endpoint: string): Promise<T> {
   const response = await fetch(`${Astro.url.origin}${endpoint}`);

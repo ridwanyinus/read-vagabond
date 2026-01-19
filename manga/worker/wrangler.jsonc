@@ -16,6 +16,11 @@
 			"bucket_name": "manga",
 			"remote": true,
 		},
+		{
+			"binding": "vagabond_manga_hq",
+			"bucket_name": "vagabond-manga-hq",
+			"remote": true,
+		},
 	],
 	/**
 	 * Smart Placement

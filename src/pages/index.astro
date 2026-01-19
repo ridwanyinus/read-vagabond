@@ -1,4 +1,6 @@
 ---
+import "../styles/global.css";
+
 async function fetchJson<T>(endpoint: string): Promise<T> {
   const response = await fetch(`${Astro.url.origin}${endpoint}`);
   return response.json();
@@ -20,7 +22,7 @@ const chapters = await fetchJson<
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="font-sans">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -43,361 +45,77 @@ const chapters = await fetchJson<
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <style>
-      :root {
-        --bg: #ffffff;
-        --fg: #0b0b0c;
-        --muted: #6b7280;
-        --accent: #374151;
-        --card: #f9fafb;
-        --border: #e5e7eb;
-      }
-      * {
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        background: var(--bg);
-        color: var(--fg);
-        font-family:
-          Inter,
-          system-ui,
-          -apple-system,
-          Segoe UI,
-          Roboto,
-          sans-serif;
-      }
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      .container {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 24px;
-      }
-      header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-      }
-      .logo {
-        font-weight: 700;
-        letter-spacing: 0.4px;
-      }
-      .cta {
-        padding: 10px 14px;
-        border-radius: 10px;
-        background: var(--fg);
-        color: var(--bg);
-        font-weight: 600;
-      }
-      .hero {
-        padding: 96px 0 64px;
-        display: grid;
-        grid-template-columns: 1.1fr 0.9fr;
-        gap: 40px;
-      }
-      @media (max-width: 900px) {
-        .hero {
-          grid-template-columns: 1fr;
-          padding-top: 64px;
-        }
-      }
-      h1 {
-        font-size: clamp(36px, 6vw, 64px);
-        line-height: 1.05;
-        margin: 0 0 16px;
-      }
-      p.lead {
-        color: var(--muted);
-        font-size: 18px;
-        max-width: 52ch;
-      }
-      .hero-actions {
-        display: flex;
-        gap: 12px;
-        margin-top: 28px;
-        flex-wrap: wrap;
-      }
-      .btn {
-        padding: 12px 16px;
-        border-radius: 12px;
-        border: 1px solid var(--border);
-        background: var(--card);
-      }
-      .btn.primary {
-        background: var(--fg);
-        color: var(--bg);
-        border-color: transparent;
-        font-weight: 600;
-      }
-      .mock {
-        background: linear-gradient(180deg, #f3f4f6, #eff6ff);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 16px;
-      }
-      .page {
-        background: #ffffff;
-        border-radius: 10px;
-        border: 1px solid #d1d5db;
-        padding: 18px;
-        color: #374151;
-      }
-      .page + .page {
-        margin-top: 10px;
-      }
-      section {
-        padding: 64px 0;
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
-      }
-      @media (max-width: 900px) {
-        .grid {
-          grid-template-columns: 1fr;
-        }
-      }
-      .card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 20px;
-      }
-      .card h3 {
-        margin-top: 0;
-      }
-      .red-logo {
-        filter: brightness(0) saturate(100%) invert(28%) sepia(100%)
-          saturate(10000%) hue-rotate(1deg);
-      }
-      .chapters-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-      .chapter-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 16px 20px;
-        border-bottom: 1px solid var(--border);
-        background: var(--card);
-        margin-bottom: 8px;
-        border-radius: 8px;
-        transition: all 0.2s;
-        text-decoration: none;
-      }
-      .chapter-item:hover {
-        background-color: #efefef;
-        transform: translateX(4px);
-      }
-      .chapter-info {
-        flex: 1;
-      }
-      .chapter-number {
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 4px;
-      }
-      .chapter-title {
-        font-weight: 600;
-        color: var(--fg);
-        font-size: 15px;
-      }
-      .chapter-desc {
-        font-size: 13px;
-        color: var(--muted);
-        margin-top: 4px;
-      }
-      .read-btn {
-        padding: 8px 14px;
-        background: var(--fg);
-        color: var(--bg);
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 13px;
-        white-space: nowrap;
-        margin-left: 16px;
-        transition: background 0.2s;
-      }
-      .read-btn:hover {
-        opacity: 0.9;
-      }
-      footer {
-        border-top: 1px solid var(--border);
-        padding: 32px 0;
-        color: var(--muted);
-      }
-
-      /* Mobile Responsiveness */
-      @media (max-width: 768px) {
-        .container {
-          padding: 16px;
-        }
-
-        header {
-          flex-wrap: wrap;
-          gap: 12px;
-        }
-
-        .logo {
-          font-size: 16px;
-        }
-
-        .cta {
-          padding: 8px 12px;
-          font-size: 14px;
-        }
-
-        .hero {
-          padding: 48px 0 32px;
-          gap: 24px;
-        }
-
-        .hero img {
-          width: 100%;
-          max-width: 400px;
-          margin: 0 auto;
-        }
-
-        h1 {
-          font-size: clamp(28px, 8vw, 42px);
-        }
-
-        p.lead {
-          font-size: 16px;
-        }
-
-        .hero-actions {
-          flex-direction: column;
-          width: 100%;
-        }
-
-        .btn {
-          width: 100%;
-          text-align: center;
-          justify-content: center;
-        }
-
-        section {
-          padding: 40px 0;
-        }
-
-        .chapter-item {
-          padding: 12px 16px;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 12px;
-        }
-
-        .chapter-item:hover {
-          transform: none;
-        }
-
-        .read-btn {
-          margin-left: 0;
-          width: 100%;
-          text-align: center;
-        }
-
-        .card {
-          padding: 16px;
-        }
-
-        .card h3 {
-          font-size: 18px;
-        }
-
-        .card > div {
-          flex-direction: column !important;
-          gap: 12px !important;
-        }
-
-        .card a.btn,
-        .card a.btn.primary {
-          width: 100%;
-          text-align: center;
-          margin-left: 0 !important;
-          display: block !important;
-        }
-      }
-
-      @media (max-width: 480px) {
-        h1 {
-          font-size: 24px;
-        }
-
-        .chapter-number,
-        .chapter-title,
-        .chapter-desc {
-          font-size: 12px;
-        }
-
-        .read-btn {
-          font-size: 12px;
-          padding: 6px 12px;
-        }
-      }
-    </style>
   </head>
-  <body>
-    <header class="container">
-      <div class="logo">{title}</div>
-      <a class="cta" href="#get-started">Get Started</a>
+  <body class="m-0 p-0 bg-white text-gray-900">
+    <header
+      class="max-w-275 mx-auto px-6 py-6 flex items-center justify-between gap-4 flex-wrap md:flex-nowrap"
+    >
+      <div class="font-bold tracking-wide text-base md:text-lg">{title}</div>
+      <a
+        class="px-3.5 py-2.5 md:px-4 md:py-3 rounded-xl bg-gray-900 text-white font-semibold text-sm md:text-base"
+        href="#get-started">Get Started</a
+      >
     </header>
 
-    <main class="container">
-      <section class="hero">
+    <main class="max-w-275 mx-auto px-4 md:px-6">
+      <section
+        class="pt-12 pb-8 md:pt-24 md:pb-16 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6 md:gap-10"
+      >
         <div>
-          <h1>Read Takehiko Inoue's masterpiece Vagabond like never before</h1>
-          <p class="lead">High-quality pages. Free and ad-free. Forever.</p>
-          <div class="hero-actions">
-            <a class="btn primary" href="#chapters">Start Reading →</a>
-            <a class="btn" href="#donate">Donate</a>
+          <h1
+            class="text-[clamp(1.5rem,8vw,2.625rem)] md:text-[clamp(2.25rem,6vw,4rem)] leading-[1.05] m-0 mb-4"
+          >
+            Read Takehiko Inoue's masterpiece Vagabond like never before
+          </h1>
+          <p class="text-gray-500 text-base md:text-lg max-w-[52ch]">
+            High-quality pages. Free and ad-free. Forever.
+          </p>
+          <div
+            class="flex flex-col md:flex-row gap-3 mt-7 flex-wrap w-full md:w-auto"
+          >
+            <a
+              class="px-4 py-3 rounded-xl bg-gray-900 text-white border-transparent font-semibold text-center w-full md:w-auto"
+              href="#chapters">Start Reading →</a
+            >
+            <a
+              class="px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-center w-full md:w-auto"
+              href="#donate">Donate</a
+            >
           </div>
         </div>
-        <img src="/Musashi_Eating.jpg" alt="Musashi Eating" width="500" />
-
-        <!--
-		<div class="mock">
-          <div class="page">Vagabond — Chapter 1</div>
-          <div class="page">
-            Full-width pages · Keyboard navigation · Zero clutter
-          </div>
-          <div class="page">Progress saved locally</div>
-        </div>
-		 -->
+        <img
+          src="/Musashi_Eating.jpg"
+          alt="Musashi Eating"
+          width="500"
+          class="w-full md:max-w-100 lg:max-w-full mx-auto"
+        />
       </section>
 
-      <section id="chapters">
-        <h2 style="text-align: center; margin-bottom: 12px;">Chapters</h2>
-        <p
-          style="text-align: center; color: var(--muted); margin-bottom: 32px; font-size: 14px;"
-        >
+      <section id="chapters" class="py-10 md:py-16">
+        <h2 class="text-center mb-3 text-2xl font-semibold">Chapters</h2>
+        <p class="text-center text-gray-500 mb-8 text-sm">
           {metadata.tankobon} volumes • {metadata.chapters} chapters
         </p>
-        <ol class="chapters-list">
+        <ol class="list-none p-0 m-0">
           {
             chapters.map((chapter) => (
               <li>
-                <div class="chapter-item">
-                  <div class="chapter-info">
-                    <div class="chapter-number">Ch. {chapter.number}</div>
-                    <div class="chapter-title">{chapter.title}</div>
-                    <div class="chapter-desc">{chapter.description}</div>
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between p-3 md:p-4 md:px-5 border-b border-gray-200 bg-gray-50 mb-2 rounded-lg transition-all duration-200 hover:bg-gray-100 hover:translate-x-1 md:hover:translate-x-1 no-underline gap-3 md:gap-0">
+                  <div class="flex-1">
+                    <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                      Ch. {chapter.number}
+                    </div>
+                    <div class="font-semibold text-gray-900 text-sm md:text-base">
+                      {chapter.title}
+                    </div>
+                    <div class="text-xs md:text-[13px] text-gray-500 mt-1">
+                      {chapter.description}
+                    </div>
                   </div>
-                  <a class="read-btn" href={`/chapter/${chapter.number}`}>
+                  <a
+                    class="px-3.5 py-2 md:px-4 md:py-2 bg-gray-900 text-white rounded-md no-underline font-semibold text-xs md:text-[13px] whitespace-nowrap md:ml-4 transition-opacity hover:opacity-90 text-center w-full md:w-auto"
+                    href={`/chapter/${chapter.number}`}
+                  >
                     Read
                   </a>
                 </div>
@@ -407,27 +125,27 @@ const chapters = await fetchJson<
         </ol>
       </section>
 
-      <section id="donate">
-        <div class="card">
-          <h3>Support This Project</h3>
+      <section id="donate" class="py-10 md:py-16">
+        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 md:p-5">
+          <h3 class="mt-0 text-lg md:text-xl font-semibold">
+            Support This Project
+          </h3>
           <p>
             If you enjoy this reader and want to support its development,
             consider buying me a coffee! Your donations help keep this project
             high-quality, free and ad-free for everyone.
           </p>
-          <div style="margin-top: 20px;">
+          <div class="mt-5 flex flex-col md:flex-row gap-3">
             <a
-              class="btn primary"
+              class="inline-block px-4 py-3 rounded-xl bg-gray-900 text-white border-transparent font-semibold text-center w-full md:w-auto"
               href="https://www.paypal.com/paypalme/mdnssknght"
               target="_blank"
-              style="display: inline-block;"
               >Donate via Paypal{" "}<i class="fab fa-paypal"></i>
             </a>
             <a
-              class="btn"
+              class="inline-block px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-center w-full md:w-auto"
               href="https://buymeacoffee.com/crydafan"
               target="_blank"
-              style="display: inline-block; margin-left: 12px;"
               >Buy Me a Coffee{" "}<i class="fa fa-coffee"></i>
             </a>
           </div>
@@ -435,8 +153,8 @@ const chapters = await fetchJson<
       </section>
     </main>
 
-    <footer>
-      <div class="container">
+    <footer class="border-t border-gray-200 py-8 text-gray-500">
+      <div class="max-w-275 mx-auto px-4 md:px-6">
         Made with ❤️ by Leonardo. For Vagabond fans, by a Vagabond fan.
       </div>
     </footer>

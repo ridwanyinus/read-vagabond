@@ -98,10 +98,10 @@ const pages = Array.from(
 
         <div class="flex items-center gap-2 md:gap-3">
           <span
-            class="text-gray-500 text-[11px] md:text-sm font-medium whitespace-nowrap"
+            class="text-gray-500 text-[11px] md:text-sm font-medium whitespace-nowrap uppercase"
             id="pageCounter"
           >
-            Page 1 / {pages.length}
+            Pg. 1 / {pages.length}
           </span>
           {
             prevChapter ? (
@@ -253,7 +253,7 @@ const pages = Array.from(
       let lastScrollTop = 0;
 
       function updateUI() {
-        pageCounter.textContent = `Page ${currentPage + 1} / ${totalPages}`;
+        pageCounter.textContent = `Pg. ${currentPage + 1} / ${totalPages}`;
         const progress = ((currentPage + 1) / totalPages) * 100;
         progressFill.style.width = `${progress}%`;
       }

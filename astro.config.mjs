@@ -3,8 +3,16 @@ import { defineConfig } from 'astro/config';
 
 import cloudflare from '@astrojs/cloudflare';
 
+import tailwindcss from '@tailwindcss/vite';
+
 // https://astro.build/config
 export default defineConfig({
   adapter: cloudflare(),
-  output: 'server', // Enable SSR for all pages
+
+  // Enable SSR for all pages
+  output: 'server',
+
+  vite: {
+    plugins: [tailwindcss()]
+  }
 });

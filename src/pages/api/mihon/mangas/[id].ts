@@ -15,7 +15,7 @@ export const GET: APIRoute = async ({ locals, params }) => {
 
   const db = locals.runtime?.env?.vagabond_db;
   const { results: chapters } = await db
-    .prepare("SELECT * FROM chapters ORDER BY number ASC")
+    .prepare("SELECT * FROM chapters ORDER BY number DESC")
     .all();
 
   return new Response(JSON.stringify({ ...manga, chapters }), {

@@ -1,11 +1,11 @@
-// src/pages/api/mihon/mangas.ts
+// src/pages/api/mihon/mangas/[id]/index.ts
 import type { APIRoute } from "astro";
-import data from "../data.json";
+import data from "../../data.json";
 
 export const GET: APIRoute = async ({ locals, params }) => {
-  const { id } = params;
+  const mangaId = params.manga;
 
-  const manga = data.find((manga) => manga.id === id);
+  const manga = data.find((manga) => manga.id === mangaId);
   if (!manga) {
     return new Response(JSON.stringify({ error: "Manga not found" }), {
       status: 404,
@@ -15,7 +15,7 @@ export const GET: APIRoute = async ({ locals, params }) => {
 
   const db = locals.runtime?.env?.vagabond_db;
   const { results: chapters } = await db
-    .prepare("SELECT * FROM chapters ORDER BY number DESC")
+    .prepare("SELECT * FROM chapters ORDER BY number ASC")
     .all();
 
   return new Response(JSON.stringify({ ...manga, chapters }), {

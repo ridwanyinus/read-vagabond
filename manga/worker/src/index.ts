@@ -5,9 +5,9 @@ export default {
 		// http://localhost:8087/volume-XY/chapter-X/page-XYZ
 		const match_page = url.pathname.match(/volume-(\d+)\/chapter-(\d+)\/page-(\d+)$/);
 		if (match_page) {
-			const volume = match_page[1];
-			const chapter = match_page[2];
-			const page = match_page[3];
+			const volume = String(parseInt(match_page[1])).padStart(2, '0');
+			const chapter = String(parseInt(match_page[2])).padStart(3, '0');
+			const page = String(parseInt(match_page[3])).padStart(3, '0');
 
 			const object_png = await env.vagabond_manga_vizbig.get(`volume-${volume}/chapter-${chapter}/page-${page}.png`);
 			if (object_png) {
@@ -37,7 +37,7 @@ export default {
 		// http://localhost:8087/volume-XY/cover
 		const match_cover = url.pathname.match(/volume-(\d+)\/cover$/);
 		if (match_cover) {
-			const volume = match_cover[1];
+			const volume = String(parseInt(match_cover[1])).padStart(2, '0');
 
 			const object = await env.vagabond_manga_vizbig.get(`covers/volume-${volume}.jpg`);
 			if (!object) {

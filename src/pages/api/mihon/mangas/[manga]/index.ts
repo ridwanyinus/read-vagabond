@@ -13,12 +13,7 @@ export const GET: APIRoute = async ({ locals, params }) => {
     });
   }
 
-  const db = locals.runtime?.env?.vagabond_db;
-  const { results: chapters } = await db
-    .prepare("SELECT * FROM chapters ORDER BY number ASC")
-    .all();
-
-  return new Response(JSON.stringify({ ...manga, chapters }), {
+  return new Response(JSON.stringify(manga), {
     headers: {
       "Content-Type": "application/json",
       "Cache-Control":

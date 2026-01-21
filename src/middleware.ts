@@ -10,10 +10,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const newResponse = new Response(response.body, response);
 
     if (context.url.pathname === "/") {
-      // 1 day cache, 7 days stale-while-revalidate
+      // 1 hour cache, 1 day stale-while-revalidate
       newResponse.headers.set(
         "Cache-Control",
-        "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800",
+        "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
       );
     } else if (context.url.pathname.includes("/chapter-")) {
       // 30 days cache

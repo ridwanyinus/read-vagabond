@@ -14,7 +14,7 @@ export default {
 				return new Response(object_png.body, {
 					headers: {
 						'Content-Type': 'image/png',
-						'Cache-Control': 'public, max-age=31536000, immutable',
+						'Cache-Control': 'public, max-age=31536000, s-maxage=31536000, stale-while-revalidate=31536000, immutable',
 						'Access-Control-Allow-Origin': '*',
 					},
 				});
@@ -24,8 +24,8 @@ export default {
 			if (object_jpg) {
 				return new Response(object_jpg.body, {
 					headers: {
-						'Content-Type': 'image/jpg',
-						'Cache-Control': 'public, max-age=31536000, immutable',
+						'Content-Type': 'image/jpeg',
+						'Cache-Control': 'public, max-age=31536000, s-maxage=31536000, stale-while-revalidate=31536000, immutable',
 						'Access-Control-Allow-Origin': '*',
 					},
 				});
@@ -46,8 +46,8 @@ export default {
 
 			return new Response(object.body, {
 				headers: {
-					'Content-Type': 'image/jpg',
-					'Cache-Control': 'public, max-age=31536000, immutable',
+					'Content-Type': 'image/jpeg',
+					'Cache-Control': 'public, max-age=31536000, s-maxage=31536000, stale-while-revalidate=31536000, immutable',
 					'Access-Control-Allow-Origin': '*',
 				},
 			});

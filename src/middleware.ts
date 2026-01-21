@@ -10,24 +10,28 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const newResponse = new Response(response.body, response);
 
     if (context.url.pathname === "/") {
+      // 1 day cache, 7 days stale-while-revalidate
       newResponse.headers.set(
         "Cache-Control",
-        "public, max-age=300, s-maxage=300, stale-while-revalidate=3600",
+        "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800",
       );
     } else if (context.url.pathname.includes("/chapter-")) {
+      // 30 days cache
       newResponse.headers.set(
         "Cache-Control",
-        "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800, immutable",
+        "public, max-age=2592000, s-maxage=2592000, stale-while-revalidate=31536000, immutable",
       );
     } else if (context.url.pathname.includes("/volume-")) {
+      // 7 days cache, 30 days stale-while-revalidate
       newResponse.headers.set(
         "Cache-Control",
-        "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
+        "public, max-age=604800, s-maxage=604800, stale-while-revalidate=2592000, immutable",
       );
     } else {
+      // 1 day cache, 7 days stale-while-revalidate
       newResponse.headers.set(
         "Cache-Control",
-        "public, max-age=600, s-maxage=600, stale-while-revalidate=3600",
+        "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800",
       );
     }
 

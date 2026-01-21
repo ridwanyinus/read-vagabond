@@ -125,11 +125,7 @@ const volumes = await fetchJson<
                 <div class="relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300">
                   <div class="aspect-2/3 relative overflow-hidden bg-gray-100">
                     <img
-                      src={`${
-                        import.meta.env.PROD
-                          ? "https://manga.readbagabondo.com"
-                          : "http://localhost:8787"
-                      }/volume-${String(volume.volume).padStart(2, "0")}/cover`}
+                      src={`https://bucket.readbagabondo.com/covers/volume-${volume.volume.toString().padStart(2, "0")}.jpg`}
                       alt={`Volume ${volume.volume} Cover`}
                       class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       loading="lazy"

@@ -31,10 +31,8 @@ const data = await fetchJson<{
   }>;
 }>(`/api/volumes/${volume}`);
 
-const baseUrl = import.meta.env.PROD
-  ? "https://manga.readbagabondo.com"
-  : "http://localhost:8787";
-const coverUrl = `${baseUrl}/volume-${String(data.volume.volume).padStart(2, "0")}/cover`;
+// Confusing. Migrate to query database instead.
+const coverUrl = `https://bucket.readbagabondo.com/covers/volume-${data.volume.volume.toString().padStart(2, "0")}.jpg`;
 ---
 
 <!doctype html>

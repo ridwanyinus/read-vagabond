@@ -28,16 +28,12 @@ const nextChapter = chapterNum < metadata.chapters ? chapterNum + 1 : null;
 const pages = Array.from(
   { length: currentChapter.page_count },
   (_, i) => i + 1,
-).map(
-  (pageNum) =>
-    `${
-      import.meta.env.PROD
-        ? "https://manga.readbagabondo.com"
-        : "http://localhost:8787"
-    }/volume-${volume!.padStart(2, "0")}/chapter-${currentChapter.number.toString().padStart(3, "0")}/page-${String(
-      pageNum,
-    ).padStart(3, "0")}`,
-);
+).map((pageNumber) => {
+  const volumeStr = volume?.padStart(2, "0");
+  const numberStr = currentChapter.number.toString().padStart(3, "0");
+  const pageStr = pageNumber.toString().padStart(3, "0");
+  return `https://bucket.readbagabondo.com/volume-${volumeStr}/chapter-${numberStr}/page-${pageStr}.png`;
+});
 ---
 
 <!doctype html>

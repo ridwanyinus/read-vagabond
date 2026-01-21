@@ -1,5 +1,6 @@
 ---
 import "../../styles/global.css";
+import { getVolumeDetails } from "../../lib/db";
 
 const { volume } = Astro.params;
 
@@ -7,29 +8,15 @@ if (!volume) {
   return Astro.redirect("/");
 }
 
-async function fetchJson<T>(endpoint: string): Promise<T> {
-  const response = await fetch(`${Astro.url.origin}${endpoint}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch: ${response.statusText}`);
-  }
-  return response.json();
+const db = Astro.locals.runtime?.env?.vagabond_db;
+if (!db) {
+  throw new Error("Database not configured");
 }
 
-const data = await fetchJson<{
-  volume: {
-    volume: number;
-    first_chapter: number;
-    last_chapter: number;
-    chapter_count: number;
-    release_date: string;
-  };
-  chapters: Array<{
-    number: number;
-    title: string;
-    description: string | null;
-    release_date: string;
-  }>;
-}>(`/api/volumes/${volume}`);
+const data = await getVolumeDetails(db, volume);
+if (!data) {
+  return Astro.redirect("/");
+}
 
 // Confusing. Migrate to query database instead.
 const coverUrl = `https://bucket.readbagabondo.com/covers/volume-${data.volume.volume.toString().padStart(2, "0")}.jpg`;
@@ -167,51 +154,53 @@ const coverUrl = `https://bucket.readbagabondo.com/covers/volume-${data.volume.v
                 >
                   <div class="divide-y divide-gray-200">
                     {
-                      data.chapters.map((chapter) => (
-                        <a
-                          href={`/volume-${data.volume.volume}/chapter-${chapter.number}`}
-                          class="flex items-center justify-between p-3 hover:bg-white transition-colors duration-150 group"
-                        >
-                          <div class="flex-1 min-w-0 pr-4">
-                            <div class="flex items-center gap-2 mb-1">
-                              <span class="text-xs font-medium text-gray-700">
-                                Ch. {chapter.number}
-                              </span>
-                              {chapter.release_date && (
-                                <>
-                                  <span class="text-gray-400">•</span>
-                                  <span class="text-xs text-gray-500">
-                                    {new Date(
-                                      chapter.release_date,
-                                    ).toLocaleDateString("en-US", {
-                                      month: "short",
-                                      day: "numeric",
-                                    })}
-                                  </span>
-                                </>
-                              )}
+                      data.chapters.map(
+                        (chapter: (typeof data.chapters)[number]) => (
+                          <a
+                            href={`/volume-${data.volume.volume}/chapter-${chapter.number}`}
+                            class="flex items-center justify-between p-3 hover:bg-white transition-colors duration-150 group"
+                          >
+                            <div class="flex-1 min-w-0 pr-4">
+                              <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xs font-medium text-gray-700">
+                                  Ch. {chapter.number}
+                                </span>
+                                {chapter.release_date && (
+                                  <>
+                                    <span class="text-gray-400">•</span>
+                                    <span class="text-xs text-gray-500">
+                                      {new Date(
+                                        chapter.release_date,
+                                      ).toLocaleDateString("en-US", {
+                                        month: "short",
+                                        day: "numeric",
+                                      })}
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                              <h3 class="text-sm font-semibold text-gray-900 group-hover:text-gray-700 transition-colors truncate">
+                                {chapter.title || "Untitled Chapter"}
+                              </h3>
                             </div>
-                            <h3 class="text-sm font-semibold text-gray-900 group-hover:text-gray-700 transition-colors truncate">
-                              {chapter.title || "Untitled Chapter"}
-                            </h3>
-                          </div>
-                          <div class="flex items-center">
-                            <svg
-                              class="w-5 h-5 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all shrink-0"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M9 5l7 7-7 7"
-                              />
-                            </svg>
-                          </div>
-                        </a>
-                      ))
+                            <div class="flex items-center">
+                              <svg
+                                class="w-5 h-5 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all shrink-0"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M9 5l7 7-7 7"
+                                />
+                              </svg>
+                            </div>
+                          </a>
+                        ),
+                      )
                     }
                   </div>
                 </div>

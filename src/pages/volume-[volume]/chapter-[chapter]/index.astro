@@ -1,25 +1,24 @@
 ---
 import "../../../styles/global.css";
-
-async function fetchJson<T>(endpoint: string): Promise<T> {
-  const response = await fetch(`${Astro.url.origin}${endpoint}`);
-  return response.json();
-}
+import { getChapterDetails, getMetadata } from "../../../lib/db";
 
 const { volume, chapter } = Astro.params;
 
-const currentChapter = await fetchJson<{
-  number: number;
-  title: string;
-  page_count: number;
-}>(`/api/chapters/${chapter}`);
+if (!chapter) {
+  return Astro.redirect("/");
+}
+
+const db = Astro.locals.runtime?.env?.vagabond_db;
+if (!db) {
+  throw new Error("Database not configured");
+}
+
+const currentChapter = await getChapterDetails(db, chapter);
 if (!currentChapter) {
   return Astro.redirect("/");
 }
 
-const metadata = await fetchJson<{ tankobon: number; chapters: number }>(
-  "/api/metadata",
-);
+const metadata = await getMetadata(db);
 
 const chapterNum = parseInt(chapter || "1");
 const prevChapter = chapterNum > 1 ? chapterNum - 1 : null;

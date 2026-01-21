@@ -1,25 +1,14 @@
 ---
 import "../styles/global.css";
+import { getMetadata, getVolumes } from "../lib/db";
 
-async function fetchJson<T>(endpoint: string): Promise<T> {
-  const response = await fetch(`${Astro.url.origin}${endpoint}`);
-  return response.json();
+const db = Astro.locals.runtime?.env?.vagabond_db;
+if (!db) {
+  throw new Error("Database not configured");
 }
 
-const metadata = await fetchJson<{
-  tankobon: number;
-  chapters: number;
-}>("/api/metadata");
-
-const volumes = await fetchJson<
-  Array<{
-    volume: number;
-    release_date: string;
-    chapter_count: number;
-    first_chapter: number;
-    last_chapter: number;
-  }>
->("/api/volumes");
+const metadata = await getMetadata(db);
+const volumes = await getVolumes(db);
 ---
 
 <!doctype html>
@@ -120,7 +109,7 @@ const volumes = await fetchJson<
           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto"
         >
           {
-            volumes.map((volume) => (
+            volumes.map((volume: (typeof volumes)[number]) => (
               <a href={`/volume-${volume.volume}`} class="group block">
                 <div class="relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300">
                   <div class="aspect-2/3 relative overflow-hidden bg-gray-100">

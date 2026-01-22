@@ -10,11 +10,14 @@ export const GET: APIRoute = async ({ locals, params }) => {
     .bind(chapterId)
     .first();
 
-  return new Response(JSON.stringify(chapterData), {
-    headers: {
-      "Content-Type": "application/json",
-      "Cache-Control":
-        "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800",
+  return new Response(
+    JSON.stringify({ ...chapterData, manga_id: params.manga }),
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control":
+          "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800",
+      },
     },
-  });
+  );
 };

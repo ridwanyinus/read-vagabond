@@ -7,7 +7,12 @@ export const GET: APIRoute = async ({ locals }) => {
     .prepare("SELECT * FROM chapters ORDER BY number ASC")
     .all();
 
-  return new Response(JSON.stringify(chapters), {
+  const processedChapters = chapters.map((chapter) => ({
+    ...chapter,
+    manga_id: "1",
+  }));
+
+  return new Response(JSON.stringify(processedChapters), {
     headers: {
       "Content-Type": "application/json",
       "Cache-Control":

@@ -4,7 +4,7 @@ import type { APIRoute } from "astro";
 export const GET: APIRoute = async ({ locals }) => {
   const db = locals.runtime.env.vagabond_db;
   const { results: chapters } = await db
-    .prepare("SELECT * FROM chapters ORDER BY number ASC")
+    .prepare("SELECT * FROM chapters ORDER BY number DESC")
     .all();
 
   const processedChapters = chapters.map((chapter) => ({

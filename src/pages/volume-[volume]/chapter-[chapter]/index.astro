@@ -242,36 +242,33 @@ const pages = Array.from(
 
     <script define:vars={{ totalPages: pages.length, nextChapter, prevChapter }}
     >
-      let currentPage = 0;
       const pages = document.querySelectorAll("img[data-page]");
       const progressBar = document.getElementById("progressBar");
       const progressFill = document.getElementById("progressFill");
       const pageCounter = document.getElementById("pageCounter");
       const topBar = document.getElementById("topBar");
+      const keyboardHint = document.getElementById("keyboardHint");
+
+      let currentPage = 0;
       let hideTimeout;
       let lastScrollTop = 0;
 
-      function updateUI() {
+      const updateNavbar = () => {
         pageCounter.textContent = `Pg. ${currentPage + 1} / ${totalPages}`;
-        const progress = ((currentPage + 1) / totalPages) * 100;
-        progressFill.style.width = `${progress}%`;
-      }
+        progressFill.style.width = `${((currentPage + 1) / totalPages) * 100}%`;
+      };
 
-      function scrollToPage(index) {
-        if (index < 0 || index >= pages.length) return;
+      const hideNavbar = () => {
+        topBar.classList.add("-translate-y-full");
+        progressBar.classList.add("-translate-y-24");
+      };
 
-        const page = pages[index];
+      const showNavbar = () => {
+        topBar.classList.remove("-translate-y-full");
+        progressBar.classList.remove("-translate-y-24");
+      };
 
-        window.scrollTo({
-          top: page.offsetTop,
-          behavior: "smooth",
-        });
-
-        currentPage = index;
-        updateUI();
-      }
-
-      function onScroll() {
+      window.addEventListener("scroll", () => {
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
         const windowHeight = window.innerHeight;
         const middlePoint = scrollTop + windowHeight / 2;
@@ -283,24 +280,39 @@ const pages = Array.from(
           if (Math.abs(middlePoint - pageMiddle) < rect.height / 2) {
             if (currentPage !== index) {
               currentPage = index;
-              updateUI();
+              updateNavbar();
             }
           }
         });
 
         if (scrollTop < lastScrollTop) {
-          topBar.classList.remove("-translate-y-full");
-          progressBar.classList.remove("-translate-y-24");
+          showNavbar();
+          clearTimeout(hideTimeout);
+          hideTimeout = setTimeout(hideNavbar, 3000);
+        } else {
+          hideNavbar();
         }
 
-        clearTimeout(hideTimeout);
-        hideTimeout = setTimeout(() => {
-          topBar.classList.add("-translate-y-full");
-          progressBar.classList.add("-translate-y-24");
-        }, 3000);
-
         lastScrollTop = scrollTop;
-      }
+      });
+
+      document.addEventListener("mousemove", () => {
+        showNavbar();
+        clearTimeout(hideTimeout);
+        hideTimeout = setTimeout(hideNavbar, 3000);
+      });
+
+      const scrollToPage = (index) => {
+        if (index < 0 || index >= pages.length) return;
+
+        window.scrollTo({
+          top: pages[index].offsetTop,
+          behavior: "smooth",
+        });
+
+        currentPage = index;
+        updateNavbar();
+      };
 
       document.addEventListener("keydown", (e) => {
         if (e.key === "ArrowDown" || e.key === "ArrowRight") {
@@ -320,32 +332,17 @@ const pages = Array.from(
         }
       });
 
-      document.addEventListener("mousemove", () => {
-        topBar.classList.remove("-translate-y-full");
-        progressBar.classList.remove("-translate-y-24");
-        clearTimeout(hideTimeout);
-        hideTimeout = setTimeout(() => {
-          topBar.classList.add("-translate-y-full");
-          progressBar.classList.add("-translate-y-24");
-        }, 3000);
-      });
+      const showKeyboardHint = () => {
+        keyboardHint.classList.add("opacity-100");
+      };
 
-      window.addEventListener("scroll", onScroll);
-      updateUI();
-
-      hideTimeout = setTimeout(() => {
-        topBar.classList.add("-translate-y-full");
-        progressBar.classList.add("-translate-y-24");
-      }, 3000);
+      const hideKeyboardHint = () => {
+        keyboardHint.classList.remove("opacity-100");
+      };
 
       setTimeout(() => {
-        const hint = document.getElementById("keyboardHint");
-        if (hint) {
-          hint.classList.add("opacity-100");
-          setTimeout(() => {
-            hint.classList.remove("opacity-100");
-          }, 3000);
-        }
+        showKeyboardHint();
+        setTimeout(hideKeyboardHint, 3000);
       }, 1000);
     </script>
   </body>

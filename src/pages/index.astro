@@ -224,20 +224,17 @@ const volumes = await getVolumes(db);
     </footer>
 
     <script>
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          const href = anchor.getAttribute("href");
-          if (href && href !== "#") {
-            e.preventDefault();
-            const target = document.querySelector(href);
-            if (target) {
-              target.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
-            }
-          }
-        });
+      document.addEventListener("click", (e) => {
+        const target = e.target;
+        if (!(target instanceof Element)) return;
+
+        const link = target.closest("a");
+        if (!link || !link.hash) return;
+
+        e.preventDefault();
+
+        const targetElement = document.querySelector(link.hash);
+        targetElement?.scrollIntoView({ behavior: "smooth" });
       });
     </script>
   </body>

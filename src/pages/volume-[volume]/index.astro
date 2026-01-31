@@ -1,6 +1,7 @@
 ---
 import "../../styles/global.css";
 import { getVolumeDetails } from "../../lib/db";
+import { getBookSchema, getBreadcrumbSchema } from "../../lib/metadata";
 
 const { volume } = Astro.params;
 
@@ -27,17 +28,77 @@ const coverUrl = `https://bucket.readbagabondo.com/covers/volume-${data.volume.v
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Volume {data.volume.volume} - Vagabond</title>
+    <title>Read Vagabond Manga | Volume {data.volume.volume}</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link
+      rel="canonical"
+      href={`https://readbagabondo.com/volume-${data.volume.volume}`}
+    />
     <meta
       name="description"
-      content={`Read Volume ${data.volume.volume} of Vagabond manga. Chapters ${data.volume.first_chapter}-${data.volume.last_chapter}.`}
+      content={`Read Vagabond Volume ${data.volume.volume} online for free. Contains ${data.volume.chapter_count} chapters (${data.volume.first_chapter}-${data.volume.last_chapter}). High-quality manga scans from Takehiko Inoue's masterpiece.`}
     />
+    <meta
+      name="keywords"
+      content={`Vagabond Volume ${data.volume.volume}, Vagabond chapters ${data.volume.first_chapter}-${data.volume.last_chapter}, Takehiko Inoue, read manga online`}
+    />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:type" content="book" />
+    <meta
+      property="og:url"
+      content={`https://readbagabondo.com/volume-${data.volume.volume}`}
+    />
+    <meta
+      property="og:title"
+      content={`Read Vagabond Manga | Volume ${data.volume.volume}`}
+    />
+    <meta
+      property="og:description"
+      content={`Read ${data.volume.chapter_count} chapters from Volume ${data.volume.volume} of Vagabond manga online.`}
+    />
+    <meta property="og:image" content={coverUrl} />
+    <meta property="og:site_name" content="Read Vagabond Manga" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:url"
+      content={`https://readbagabondo.com/volume-${data.volume.volume}`}
+    />
+    <meta
+      name="twitter:title"
+      content={`Read Vagabond Manga | Volume ${data.volume.volume}`}
+    />
+    <meta
+      name="twitter:description"
+      content={`${data.volume.chapter_count} chapters - Read online free`}
+    />
+    <meta name="twitter:image" content={coverUrl} />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://bucket.readbagabondo.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+    />
+
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(getBreadcrumbSchema(data.volume.volume))}
+    />
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(
+        getBookSchema(
+          data.volume.volume,
+          data.volume.chapter_count,
+          data.volume.release_date,
+          coverUrl,
+        ),
+      )}
     />
   </head>
   <body class="m-0 p-0 bg-gray-50 text-gray-900">

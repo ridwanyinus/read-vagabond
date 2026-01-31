@@ -1,6 +1,10 @@
 ---
 import "../../../styles/global.css";
 import { getChapterDetails, getMetadata } from "../../../lib/db";
+import {
+  getChapterBreadcrumbSchema,
+  getChapterSchema,
+} from "../../../lib/metadata";
 
 const { volume, chapter } = Astro.params;
 
@@ -40,34 +44,90 @@ const pages = Array.from(
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Chapter {currentChapter.number}</title>
+    <title>
+      Read Vagabond Manga | Volume {volume} - Chapter {currentChapter.number} - {
+        currentChapter.title
+      }
+    </title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link
+      rel="canonical"
+      href={`https://readbagabondo.com/volume-${volume}/chapter-${currentChapter.number}`}
+    />
     <meta
       name="description"
-      content={`Read Vagabond Chapter ${currentChapter.number}: ${currentChapter.title}`}
+      content={`Read Vagabond Chapter ${currentChapter.number}: ${currentChapter.title} online for free. ${currentChapter.page_count} pages of high-quality manga from Takehiko Inoue's masterpiece.`}
     />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <meta
+      name="keywords"
+      content={`Vagabond Chapter ${currentChapter.number}, ${currentChapter.title}, read manga online, Takehiko Inoue, Vagabond Volume ${volume}`}
+    />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:type" content="article" />
+    <meta
+      property="og:url"
+      content={`https://readbagabondo.com/volume-${volume}/chapter-${currentChapter.number}`}
+    />
+    <meta
+      property="og:title"
+      content={`Read Vagabond Manga | Volume ${volume} - Chapter ${currentChapter.number} - ${currentChapter.title}`}
+    />
+    <meta
+      property="og:description"
+      content={`Chapter ${currentChapter.number}: ${currentChapter.title} - ${currentChapter.page_count} pages. Free, high-quality manga scans from Takehiko Inoue's masterpiece.`}
+    />
+    <meta property="og:image" content={pages[0]} />
+    <meta property="og:site_name" content="Read Vagabond Manga" />
+    <meta property="article:author" content="Takehiko Inoue" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:url"
+      content={`https://readbagabondo.com/volume-${volume}/chapter-${currentChapter.number}`}
+    />
+    <meta
+      name="twitter:title"
+      content={`Read Vagabond Manga | Volume ${volume} - Chapter ${currentChapter.number} - ${currentChapter.title}`}
+    />
+    <meta
+      name="twitter:description"
+      content={`Chapter ${currentChapter.number}: ${currentChapter.title} - ${currentChapter.page_count} pages. Free, high-quality manga scans from Takehiko Inoue's masterpiece.`}
+    />
+    <meta name="twitter:image" content={pages[0]} />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://bucket.readbagabondo.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(
+        getChapterBreadcrumbSchema(volume!, currentChapter.number),
+      )}
+    />
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(
+        getChapterSchema(
+          currentChapter.title,
+          volume!,
+          currentChapter.number,
+          currentChapter.page_count,
+        ),
+      )}
+    />
+
     <script
       is:inline
       src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"
     ></script>
-    <style>
-      @keyframes fadeInOut {
-        0%,
-        100% {
-          opacity: 0;
-        }
-        10%,
-        90% {
-          opacity: 1;
-        }
-      }
-    </style>
   </head>
 
   <body class="m-0 p-0 overflow-x-hidden bg-gray-50 text-gray-900 font-sans">

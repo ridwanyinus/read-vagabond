@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import { getMetadata, getVolumes } from "../lib/db";
+import { getWebsiteSchema, getComicSeriesSchema } from "../lib/metadata";
 
 const db = Astro.locals.runtime?.env?.vagabond_db;
 if (!db) {
@@ -16,14 +17,55 @@ const volumes = await getVolumes(db);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Read Vagabond Manga - Takehiko Inoue's Masterpiece</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <title>Read Vagabond Manga | High-quality Scans of All Chapters</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="canonical" href="https://readbagabondo.com/" />
     <meta
       name="description"
-      content="A minimalist, high-quality manga reader landing page built with Astro."
+      content={`Read Vagabond manga online for free. High-quality scans of all ${metadata.chapters} chapters from Takehiko Inoue's masterpiece. No ads, no signup required. Experience reading Vagabond online like never before.`}
     />
+    <meta
+      name="keywords"
+      content="Vagabond manga, read Vagabond online, Takehiko Inoue, Miyamoto Musashi, manga reader, free manga, samurai manga"
+    />
+    <meta name="author" content="Leonardo" />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://readbagabondo.com/" />
+    <meta
+      property="og:title"
+      content={`Read Vagabond Manga | High-quality Scans of All Chapters`}
+    />
+    <meta
+      property="og:description"
+      content={`Free, high-quality Vagabond manga reader. All ${metadata.chapters} chapters of Takehiko Inoue's masterpiece. No ads, no signup.`}
+    />
+    <meta
+      property="og:image"
+      content="https://readbagabondo.com/Musashi_Eating.jpg"
+    />
+    <meta property="og:site_name" content="Read Vagabond Manga" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://readbagabondo.com/" />
+    <meta
+      name="twitter:title"
+      content={`Read Vagabond Manga | High-quality Scans of All Chapters`}
+    />
+    <meta
+      name="twitter:description"
+      content={`Free, high-quality Vagabond manga reader. All ${metadata.chapters} chapters of Takehiko Inoue's masterpiece. No ads, no signup.`}
+    />
+    <meta
+      name="twitter:image"
+      content="https://readbagabondo.com/Musashi_Eating.jpg"
+    />
+
+    <meta name="theme-color" content="#111827" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://bucket.readbagabondo.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
@@ -35,6 +77,20 @@ const volumes = await getVolumes(db);
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+
+    <!-- JSON-LD Structured Data -->
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(getWebsiteSchema())}
+    />
+
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(getComicSeriesSchema())}
+    />
+
     <script
       is:inline
       src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"

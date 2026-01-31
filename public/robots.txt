@@ -1,0 +1,10 @@
+# robots.txt for readbagabondo.com
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://readbagabondo.com/sitemap.xml
+
+# Crawl-delay for politeness
+Crawl-delay: 1

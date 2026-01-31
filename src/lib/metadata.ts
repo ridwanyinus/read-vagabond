@@ -61,7 +61,6 @@ export function getBreadcrumbSchema(volume: number) {
 
 export function getBookSchema(
   volume: number,
-  chapterCount: number,
   releaseDate: string,
   coverUrl: string,
 ) {
@@ -73,7 +72,6 @@ export function getBookSchema(
       "@type": "Person",
       name: "Takehiko Inoue",
     },
-    numberOfPages: chapterCount,
     bookFormat: "GraphicNovel",
     genre: ["Action", "Drama", "Historical", "Martial Arts", "Seinen"],
     image: `${coverUrl}`,

@@ -92,12 +92,7 @@ const coverUrl = `https://bucket.readbagabondo.com/covers/volume-${data.volume.v
       type="application/ld+json"
       is:inline
       set:html={JSON.stringify(
-        getBookSchema(
-          data.volume.volume,
-          data.volume.chapter_count,
-          data.volume.release_date,
-          coverUrl,
-        ),
+        getBookSchema(data.volume.volume, data.volume.release_date, coverUrl),
       )}
     />
   </head>

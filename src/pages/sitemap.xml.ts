@@ -1,8 +1,6 @@
 import type { APIRoute } from "astro";
 import { getVolumes, getMetadata } from "../lib/db";
 
-export const prerender = true;
-
 interface SitemapUrl {
   loc: string;
   lastmod: string;

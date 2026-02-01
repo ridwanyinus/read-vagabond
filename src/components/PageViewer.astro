@@ -42,7 +42,7 @@ const { pagesUrl, volume, prevChapter, nextChapter } = Astro.props;
 
   const volume = parseInt(container.dataset.volume!);
   const nextChapter =
-    container.dataset.nextChapter == undefined
+    container.dataset.nextChapter === undefined
       ? null
       : parseInt(container.dataset.nextChapter);
   const prevChapter =

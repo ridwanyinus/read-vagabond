@@ -3,7 +3,6 @@ import BaseLayout from "./BaseLayout.astro";
 import ChapterNavigation from "../components/ChapterNavigation.astro";
 import ProgressBar from "../components/ProgressBar.astro";
 import PageViewer from "../components/PageViewer.astro";
-import ChapterReader from "../components/ChapterReader.astro";
 import type { Props as BaseLayoutProps } from "./BaseLayout.astro";
 
 export interface Props extends BaseLayoutProps {
@@ -34,11 +33,9 @@ const { volume, chapter, prevChapter, nextChapter } = Astro.props;
 
   <ProgressBar />
 
-  <PageViewer pagesUrl={chapter.pagesUrl} />
-
-  <ChapterReader
+  <PageViewer
+    pagesUrl={chapter.pagesUrl}
     volume={volume}
-    pageCount={chapter.pagesUrl.length}
     prevChapter={prevChapter}
     nextChapter={nextChapter}
   />

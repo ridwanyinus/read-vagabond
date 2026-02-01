@@ -15,7 +15,7 @@ const { volume, chapter, prevChapter, nextChapter } = Astro.props;
 
 <nav
   class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md border-b border-gray-200/50 z-50 transition-transform duration-300"
-  id="topBar"
+  id="navBar"
 >
   <div
     class="max-w-7xl flex flex-wrap items-center justify-center md:justify-between mx-auto p-4"
@@ -40,9 +40,8 @@ const { volume, chapter, prevChapter, nextChapter } = Astro.props;
     <div class="flex items-center gap-2 md:gap-3">
       <span
         class="text-gray-500 text-[11px] md:text-sm font-medium whitespace-nowrap uppercase"
-        id="pageCounter"
       >
-        Pg. 1 / {chapter.pageCount}
+        Pg. <span id="pageCounter">1</span> / {chapter.pageCount}
       </span>
       {
         prevChapter !== null ? (
@@ -141,3 +140,22 @@ const { volume, chapter, prevChapter, nextChapter } = Astro.props;
     </div>
   </div>
 </nav>
+
+<script>
+  import { currentPage, navbarVisibility } from "../feature/reader/store";
+
+  const navBar = document.getElementById("navBar") as HTMLElement;
+  const pageCounter = document.getElementById("pageCounter") as HTMLElement;
+
+  currentPage.subscribe((page) => {
+    pageCounter.textContent = `${page + 1}`;
+  });
+
+  navbarVisibility.subscribe((visibility) => {
+    if (visibility === "visible") {
+      navBar.classList.remove("-translate-y-full");
+    } else {
+      navBar.classList.add("-translate-y-full");
+    }
+  });
+</script>

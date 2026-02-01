@@ -13,11 +13,11 @@ export interface Props extends BaseLayoutProps {
     title: string;
     pagesUrl: string[];
   };
-  prevChapterNumber: number | null;
-  nextChapterNumber: number | null;
+  prevChapter: number | null;
+  nextChapter: number | null;
 }
 
-const { volume, chapter, prevChapterNumber, nextChapterNumber } = Astro.props;
+const { volume, chapter, prevChapter, nextChapter } = Astro.props;
 ---
 
 <BaseLayout {...Astro.props}>
@@ -28,8 +28,8 @@ const { volume, chapter, prevChapterNumber, nextChapterNumber } = Astro.props;
       title: chapter.title,
       pageCount: chapter.pagesUrl.length,
     }}
-    prevChapterNumber={prevChapterNumber}
-    nextChapterNumber={nextChapterNumber}
+    prevChapter={prevChapter}
+    nextChapter={nextChapter}
   />
 
   <ProgressBar />
@@ -39,7 +39,7 @@ const { volume, chapter, prevChapterNumber, nextChapterNumber } = Astro.props;
   <ChapterReader
     volume={volume}
     pageCount={chapter.pagesUrl.length}
-    prevChapterNumber={prevChapterNumber}
-    nextChapterNumber={nextChapterNumber}
+    prevChapter={prevChapter}
+    nextChapter={nextChapter}
   />
 </BaseLayout>

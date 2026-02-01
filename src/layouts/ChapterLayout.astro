@@ -3,6 +3,7 @@ import BaseLayout from "./BaseLayout.astro";
 import ChapterNavigation from "../components/ChapterNavigation.astro";
 import ProgressBar from "../components/ProgressBar.astro";
 import PageViewer from "../components/PageViewer.astro";
+import ArrowKeysHint from "../components/ArrowKeysHint.astro";
 import type { Props as BaseLayoutProps } from "./BaseLayout.astro";
 
 export interface Props extends BaseLayoutProps {
@@ -39,4 +40,6 @@ const { volume, chapter, prevChapter, nextChapter } = Astro.props;
     prevChapter={prevChapter}
     nextChapter={nextChapter}
   />
+
+  <ArrowKeysHint />
 </BaseLayout>

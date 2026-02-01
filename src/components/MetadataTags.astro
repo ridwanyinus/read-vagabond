@@ -9,19 +9,18 @@ export interface Props {
 }
 
 const { title, description, keywords, endpoint } = Astro.props.metadata;
+
+const canonicalUrl = new URL(endpoint ?? "", "https://readbagabondo.com/").href;
 ---
 
-<link rel="canonical" href={`https://readbagabondo.com/${endpoint ?? ""}`} />
+<link rel="canonical" href={canonicalUrl} />
 <meta name="description" content={description} />
 <meta name="keywords" content={keywords.join(", ")} />
 <meta name="author" content="Leonardo" />
 <meta name="robots" content="index, follow" />
 
 <meta property="og:type" content="website" />
-<meta
-  property="og:url"
-  content={`https://readbagabondo.com/${endpoint ?? ""}`}
-/>
+<meta property="og:url" content={canonicalUrl} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta
@@ -31,10 +30,7 @@ const { title, description, keywords, endpoint } = Astro.props.metadata;
 <meta property="og:site_name" content="Read Vagabond Manga" />
 
 <meta name="twitter:card" content="summary_large_image" />
-<meta
-  name="twitter:url"
-  content={`https://readbagabondo.com/${endpoint ?? ""}`}
-/>
+<meta name="twitter:url" content={canonicalUrl} />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta

@@ -1,0 +1,31 @@
+---
+export interface Props {
+  pagesUrl: string[];
+}
+
+const { pagesUrl } = Astro.props;
+---
+
+<div class="min-h-screen bg-white flex flex-col items-center pt-20 md:pt-24">
+  <div class="w-full max-w-350 flex flex-col items-center" id="pagesContainer">
+    {
+      pagesUrl.map((pageUrl, index) => (
+        <img
+          src={pageUrl}
+          alt={`Page ${index + 1}`}
+          class="h-auto max-h-screen block mb-0.5 object-contain border border-gray-900"
+          loading={index < 3 ? "eager" : "lazy"}
+          data-page={index}
+        />
+      ))
+    }
+  </div>
+</div>
+
+<div
+  class="fixed bottom-24 left-1/2 -translate-x-1/2 flex items-center px-4 py-3 text-white bg-black/80 rounded-lg opacity-0 pointer-events-none z-50 transition-opacity duration-300 justify-center"
+  id="keyboardHint"
+  role="alert"
+>
+  <p class="text-sm font-normal">Use arrow keys to navigate</p>
+</div>

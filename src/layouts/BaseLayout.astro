@@ -15,12 +15,14 @@ const title = tagline
 ---
 
 <!doctype html>
-<html lang="en" class="font-sans">
+<html lang="en" class="font-sans scroll-smooth">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
@@ -33,12 +35,13 @@ const title = tagline
       referrerpolicy="no-referrer"
     />
     <MetadataTags {...Astro.props} />
+    <slot name="head" />
     <script
       is:inline
       src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"
     ></script>
   </head>
-  <body class="m-0 p-0 bg-white text-gray-900">
+  <body class="m-0 p-0 overflow-x-hidden bg-gray-50 text-gray-900 font-sans">
     <slot />
   </body>
 </html>

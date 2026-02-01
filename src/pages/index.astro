@@ -147,6 +147,11 @@ const volumes = await getVolumes(db);
     const link = target.closest("a");
     if (!link || !link.hash) return;
 
+    const isSamePage =
+      link.origin === window.location.origin &&
+      link.pathname === window.location.pathname;
+    if (!isSamePage) return;
+
     e.preventDefault();
 
     const targetElement = document.querySelector(link.hash);

@@ -44,7 +44,6 @@ const { volume, chapter, prevChapter, nextChapter } = Astro.props;
   <ArrowKeysHint />
 </BaseLayout>
 
-<!-- TODO: use timeout to hide navbar -->
 <script>
   import {
     navbarVisibility,
@@ -53,6 +52,7 @@ const { volume, chapter, prevChapter, nextChapter } = Astro.props;
   } from "../feature/reader/store";
 
   let lastScrollTop = 0;
+  let hideTimeout: number;
 
   document.addEventListener("scroll", () => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -61,12 +61,22 @@ const { volume, chapter, prevChapter, nextChapter } = Astro.props;
       navbarVisibility.set("hidden");
     } else {
       navbarVisibility.set("visible");
+      clearTimeout(hideTimeout);
+      hideTimeout = window.setTimeout(() => {
+        navbarVisibility.set("hidden");
+      }, 3000);
     }
 
     lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
   });
 
-  document.addEventListener("mousemove", () => navbarVisibility.set("visible"));
+  document.addEventListener("mousemove", () => {
+    navbarVisibility.set("visible");
+    clearTimeout(hideTimeout);
+    hideTimeout = window.setTimeout(() => {
+      navbarVisibility.set("hidden");
+    }, 3000);
+  });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "ArrowUp" || event.key === "ArrowLeft") {

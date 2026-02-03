@@ -33,7 +33,6 @@ const { pagesUrl, volume, prevChapter, nextChapter } = Astro.props;
 </div>
 
 <script>
-  import { onSet } from "nanostores";
   import {
     currentPage,
     isProgrammaticScroll,
@@ -43,11 +42,6 @@ const { pagesUrl, volume, prevChapter, nextChapter } = Astro.props;
   const pages = document.querySelectorAll(
     "img[data-page]",
   ) as NodeListOf<HTMLElement>;
-
-  // This is to controll the keyboard navigation bounds
-  onSet(currentPage, ({ newValue, abort }) => {
-    if (newValue < 0 || newValue >= pages.length) abort();
-  });
 
   // Called when currentPage is changed through keyboard navigation
   currentPage.subscribe((value) => {

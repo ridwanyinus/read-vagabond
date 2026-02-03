@@ -52,7 +52,7 @@ const { volume, chapter, prevChapter, nextChapter } = Astro.props;
     isProgrammaticScroll,
   } from "../feature/reader/store";
   const viewer = document.querySelector("[data-page-count]") as HTMLElement;
-  const pageCount = parseInt(viewer.dataset.pageCount || "0");
+  const pageCount = Number(viewer.dataset.pageCount);
 
   let lastScrollTop = 0;
   let hideTimeout: number;

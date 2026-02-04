@@ -1,0 +1,98 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import ChapterNavigation from "../components/ChapterNavigation.astro";
+import ProgressBar from "../components/ProgressBar.astro";
+import PageViewer from "../components/PageViewer.astro";
+import ArrowKeysHint from "../components/ArrowKeysHint.astro";
+import type { Props as BaseLayoutProps } from "./BaseLayout.astro";
+
+export interface Props extends BaseLayoutProps {
+  volume: number;
+  chapter: {
+    number: number;
+    title: string;
+    pagesUrl: string[];
+  };
+  prevChapter: number | null;
+  nextChapter: number | null;
+}
+
+const { volume, chapter, prevChapter, nextChapter } = Astro.props;
+---
+
+<BaseLayout {...Astro.props}>
+  <ChapterNavigation
+    volume={volume}
+    chapter={{
+      number: chapter.number,
+      title: chapter.title,
+      pageCount: chapter.pagesUrl.length,
+    }}
+    prevChapter={prevChapter}
+    nextChapter={nextChapter}
+  />
+
+  <ProgressBar />
+
+  <main data-page-count={chapter.pagesUrl.length}>
+    <PageViewer pagesUrl={chapter.pagesUrl} />
+    <ArrowKeysHint />
+  </main>
+</BaseLayout>
+
+<script>
+  import {
+    navbarVisibility,
+    currentPage,
+    isProgrammaticScroll,
+  } from "../feature/reader/store";
+  const viewer = document.querySelector("[data-page-count]") as HTMLElement;
+  const pageCount = Number(viewer.dataset.pageCount);
+
+  let lastScrollTop = 0;
+  let hideTimeout: number;
+
+  document.addEventListener("scroll", () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+    if (scrollTop > lastScrollTop) {
+      navbarVisibility.set("hidden");
+    } else {
+      navbarVisibility.set("visible");
+      clearTimeout(hideTimeout);
+      hideTimeout = window.setTimeout(() => {
+        navbarVisibility.set("hidden");
+      }, 3000);
+    }
+
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+  });
+
+  document.addEventListener("mousemove", () => {
+    navbarVisibility.set("visible");
+    clearTimeout(hideTimeout);
+    hideTimeout = window.setTimeout(() => {
+      navbarVisibility.set("hidden");
+    }, 3000);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    let pageIndex;
+    let currentPageIndex = currentPage.get();
+
+    if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+      event.preventDefault();
+      pageIndex = Math.max(0, currentPageIndex - 1);
+    } else if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+      event.preventDefault();
+      pageIndex = Math.min(pageCount - 1, currentPageIndex + 1);
+    } else {
+      return;
+    }
+
+    if (pageIndex !== currentPageIndex) {
+      isProgrammaticScroll.set(true);
+      currentPage.set(pageIndex);
+    }
+  });
+</script>

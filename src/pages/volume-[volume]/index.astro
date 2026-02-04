@@ -1,7 +1,9 @@
 ---
-import "../../styles/global.css";
+import ChapterList from "../../components/ChapterList.astro";
+import VolumeCover from "../../components/VolumeCover.astro";
+import VolumeInformation from "../../components/VolumeInformation.astro";
+import MainLayout from "../../layouts/MainLayout.astro";
 import { getVolumeDetails } from "../../lib/db";
-import { getBookSchema, getBreadcrumbSchema } from "../../lib/metadata";
 
 const { volume } = Astro.params;
 
@@ -23,256 +25,37 @@ if (!data) {
 const coverUrl = `https://bucket.readbagabondo.com/covers/volume-${data.volume.volume.toString().padStart(2, "0")}.jpg`;
 ---
 
-<!doctype html>
-<html lang="en" class="font-sans">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Read Vagabond Manga | Volume {data.volume.volume}</title>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-    <link
-      rel="canonical"
-      href={`https://readbagabondo.com/volume-${data.volume.volume}`}
-    />
-    <meta
-      name="description"
-      content={`Read Vagabond Volume ${data.volume.volume} online for free. Contains ${data.volume.chapter_count} chapters (${data.volume.first_chapter}-${data.volume.last_chapter}). High-quality manga scans from Takehiko Inoue's masterpiece.`}
-    />
-    <meta
-      name="keywords"
-      content={`Vagabond Volume ${data.volume.volume}, Vagabond chapters ${data.volume.first_chapter}-${data.volume.last_chapter}, Takehiko Inoue, read manga online`}
-    />
-    <meta name="robots" content="index, follow" />
-
-    <meta property="og:type" content="book" />
-    <meta
-      property="og:url"
-      content={`https://readbagabondo.com/volume-${data.volume.volume}`}
-    />
-    <meta
-      property="og:title"
-      content={`Read Vagabond Manga | Volume ${data.volume.volume}`}
-    />
-    <meta
-      property="og:description"
-      content={`Volume ${data.volume.volume} contains ${data.volume.chapter_count} chapters. Free, high-quality manga scans from Takehiko Inoue's masterpiece.`}
-    />
-    <meta property="og:image" content={coverUrl} />
-    <meta property="og:site_name" content="Read Vagabond Manga" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:url"
-      content={`https://readbagabondo.com/volume-${data.volume.volume}`}
-    />
-    <meta
-      name="twitter:title"
-      content={`Read Vagabond Manga | Volume ${data.volume.volume}`}
-    />
-    <meta
-      name="twitter:description"
-      content={`Volume ${data.volume.volume} contains ${data.volume.chapter_count} chapters. Free, high-quality manga scans from Takehiko Inoue's masterpiece.`}
-    />
-    <meta name="twitter:image" content={coverUrl} />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://bucket.readbagabondo.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-
-    <script
-      type="application/ld+json"
-      is:inline
-      set:html={JSON.stringify(getBreadcrumbSchema(data.volume.volume))}
-    />
-    <script
-      type="application/ld+json"
-      is:inline
-      set:html={JSON.stringify(
-        getBookSchema(data.volume.volume, data.volume.release_date, coverUrl),
-      )}
-    />
-  </head>
-  <body class="m-0 p-0 bg-gray-50 text-gray-900">
-    <nav
-      class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/50"
-    >
-      <div
-        class="max-w-7xl flex flex-wrap items-center justify-center md:justify-between mx-auto p-4"
-      >
-        <a href="/">
-          <img src="/Vagabond_Logo.png" alt="Vagabond" class="h-15" />
-        </a>
-      </div>
-    </nav>
-
-    <main class="pt-20">
-      <section
-        class="bg-white border-b border-gray-200 min-h-[calc(100vh-5rem)]"
-      >
-        <div class="max-w-7xl mx-auto px-4 md:px-6 py-8">
-          <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-15 h-full">
-            <div class="flex flex-col lg:w-80">
-              <div class="mb-6">
-                <div
-                  class="aspect-2/3 relative overflow-hidden rounded-xl shadow-2xl"
-                >
-                  <img
-                    src={coverUrl}
-                    alt={`Volume ${data.volume.volume} Cover`}
-                    class="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <span
-                  class="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-sm font-medium rounded-full mb-4"
-                >
-                  Volume {data.volume.volume}
-                </span>
-
-                <ul class="space-y-3 text-sm text-gray-600">
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="w-5 h-5 text-gray-400 shrink-0 mt-0.5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                      ></path>
-                    </svg>
-                    <span>{data.volume.chapter_count} chapters</span>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <svg
-                      class="w-5 h-5 text-gray-400 shrink-0 mt-0.5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path>
-                    </svg>
-                    <span
-                      >Chapters {data.volume.first_chapter}–{
-                        data.volume.last_chapter
-                      }</span
-                    >
-                  </li>
-                  {
-                    data.volume.release_date && (
-                      <li class="flex items-start gap-3">
-                        <svg
-                          class="w-5 h-5 text-gray-400 shrink-0 mt-0.5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                        <span>
-                          {new Date(
-                            data.volume.release_date,
-                          ).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
-                        </span>
-                      </li>
-                    )
-                  }
-                </ul>
-              </div>
-            </div>
-
-            <div class="flex flex-col">
-              <div class="flex-1 overflow-y-auto">
-                <div
-                  class="bg-gray-50 rounded-lg border border-gray-200 overflow-hidden"
-                >
-                  <div class="divide-y divide-gray-200">
-                    {
-                      data.chapters.map(
-                        (chapter: (typeof data.chapters)[number]) => (
-                          <a
-                            href={`/volume-${data.volume.volume}/chapter-${chapter.number}`}
-                            class="flex items-center justify-between p-3 hover:bg-white transition-colors duration-150 group"
-                          >
-                            <div class="flex-1 min-w-0 pr-4">
-                              <div class="flex items-center gap-2 mb-1">
-                                <span class="text-xs font-medium text-gray-700">
-                                  Ch. {chapter.number}
-                                </span>
-                                {chapter.release_date && (
-                                  <>
-                                    <span class="text-gray-400">•</span>
-                                    <span class="text-xs text-gray-500">
-                                      {new Date(
-                                        chapter.release_date,
-                                      ).toLocaleDateString("en-US", {
-                                        month: "short",
-                                        day: "numeric",
-                                      })}
-                                    </span>
-                                  </>
-                                )}
-                              </div>
-                              <h3 class="text-sm font-semibold text-gray-900 group-hover:text-gray-700 transition-colors truncate">
-                                {chapter.title || "Untitled Chapter"}
-                              </h3>
-                            </div>
-                            <div class="flex items-center">
-                              <svg
-                                class="w-5 h-5 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all shrink-0"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M9 5l7 7-7 7"
-                                />
-                              </svg>
-                            </div>
-                          </a>
-                        ),
-                      )
-                    }
-                  </div>
-                </div>
-              </div>
-            </div>
+<MainLayout
+  tagline={`Volume ${data.volume.volume}`}
+  metadata={{
+    title: `Read Vagabond Manga | Volume ${data.volume.volume}`,
+    description: `Read Vagabond Volume ${data.volume.volume} online for free. Contains ${data.volume.chapter_count} chapters (${data.volume.first_chapter}-${data.volume.last_chapter}). High-quality manga scans from Takehiko Inoue's masterpiece.`,
+    keywords: [
+      `Vagabond Volume ${data.volume.volume}`,
+      `Vagabond chapters ${data.volume.first_chapter}-${data.volume.last_chapter}`,
+      "Takehiko Inoue",
+      "read manga online",
+    ],
+    endpoint: `/volume-${data.volume.volume}`,
+  }}
+>
+  <main class="pt-20">
+    <section class="bg-white border-b border-gray-200 min-h-[calc(100vh-5rem)]">
+      <div class="max-w-7xl mx-auto px-4 md:px-6 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-15 h-full">
+          <div class="flex flex-col lg:w-80">
+            <VolumeCover url={coverUrl} volume={data.volume.volume} />
+            <VolumeInformation
+              volume={data.volume.volume}
+              chapterCount={data.volume.chapter_count}
+              firstChapter={data.volume.first_chapter}
+              lastChapter={data.volume.last_chapter}
+              releaseDate={data.volume.release_date}
+            />
           </div>
+          <ChapterList volume={data.volume} chapters={data.chapters} />
         </div>
-      </section>
-    </main>
-
-    <footer class="bg-white border-t border-gray-200">
-      <div class="max-w-7xl mx-auto p-4 md:p-6">
-        <span class="block text-sm text-gray-500 text-center">
-          Made with ❤️ by Leonardo. For Vagabond fans, by a Vagabond fan.
-        </span>
       </div>
-    </footer>
-  </body>
-</html>
+    </section>
+  </main>
+</MainLayout>

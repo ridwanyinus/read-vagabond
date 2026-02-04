@@ -1,0 +1,29 @@
+<div
+  class="fixed top-20 md:top-23 left-0 right-0 h-1 bg-gray-200 z-40 transition-transform duration-300"
+  id="progressBar"
+>
+  <div
+    class="h-full bg-gray-900 transition-[width] duration-100 ease-linear"
+    id="progressFill"
+  >
+  </div>
+</div>
+
+<script>
+  import { percentageRead, navbarVisibility } from "../feature/reader/store";
+
+  const progressBar = document.getElementById("progressBar") as HTMLElement;
+  const progressFill = document.getElementById("progressFill") as HTMLElement;
+
+  navbarVisibility.subscribe((visibility) => {
+    if (visibility === "visible") {
+      progressBar.classList.remove("-translate-y-24");
+    } else {
+      progressBar.classList.add("-translate-y-24");
+    }
+  });
+
+  percentageRead.subscribe((value) => {
+    progressFill.style.width = `${value}%`;
+  });
+</script>

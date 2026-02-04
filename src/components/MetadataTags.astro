@@ -1,0 +1,42 @@
+---
+export interface Props {
+  metadata: {
+    title: string;
+    description: string;
+    keywords: string[];
+    endpoint?: string;
+  };
+}
+
+const { title, description, keywords, endpoint } = Astro.props.metadata;
+
+const canonicalUrl = new URL(endpoint ?? "", "https://readbagabondo.com/").href;
+---
+
+<link rel="canonical" href={canonicalUrl} />
+<meta name="description" content={description} />
+<meta name="keywords" content={keywords.join(", ")} />
+<meta name="author" content="Leonardo" />
+<meta name="robots" content="index, follow" />
+
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta
+  property="og:image"
+  content="https://readbagabondo.com/Musashi_Eating.jpg"
+/>
+<meta property="og:site_name" content="Read Vagabond Manga" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalUrl} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta
+  name="twitter:image"
+  content="https://readbagabondo.com/Musashi_Eating.jpg"
+/>
+
+<meta name="theme-color" content="#111827" />
+<link rel="preconnect" href="https://bucket.readbagabondo.com" />

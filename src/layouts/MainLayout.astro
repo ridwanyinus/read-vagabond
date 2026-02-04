@@ -1,0 +1,14 @@
+---
+import Navigation from "../components/Navigation.astro";
+import Footer from "../components/Footer.astro";
+import BaseLayout from "./BaseLayout.astro";
+import type { Props as BaseLayoutProps } from "./BaseLayout.astro";
+
+interface Props extends BaseLayoutProps {}
+---
+
+<BaseLayout {...Astro.props}>
+  <Navigation />
+  <slot />
+  <Footer />
+</BaseLayout>

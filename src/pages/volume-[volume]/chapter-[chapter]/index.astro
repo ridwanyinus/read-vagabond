@@ -18,9 +18,10 @@ if (!db) {
 const volume = await getMangaVolumeById(db, +volumeId);
 const chapter = await getMangaChapterById(db, +chapterId);
 
-const prevChapter = chapter.number > 1 ? chapter.number - 1 : null;
+const prevChapter =
+  chapter.number > volume.firstChapter ? chapter.number - 1 : null;
 const nextChapter =
-  chapter.number < volume.chapterCount ? chapter.number + 1 : null;
+  chapter.number < volume.lastChapter ? chapter.number + 1 : null;
 
 const pagesUrl = Array.from({ length: chapter.pageCount }, (_, i) =>
   buildPageUrl({

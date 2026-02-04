@@ -18,6 +18,11 @@
 			"binding": "vagabond_db",
 			"database_name": "vagabond-db",
 			"database_id": "d0193fc5-72e8-4eaa-96d2-cb584ca4ffa2"
+		},
+		{
+			"binding": "bagabondo_db",
+			"database_name": "bagabondo-db",
+			"database_id": "e53538cb-9686-4abc-b224-453db9cf5184"
 		}
 	],
 	"routes": [

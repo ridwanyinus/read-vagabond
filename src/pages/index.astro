@@ -4,7 +4,7 @@ import VolumeCard from "../components/VolumeCard.astro";
 import { getDb } from "../db/client";
 import { getMangaLibraryCounts, getMangaVolumes } from "../lib/db";
 
-const db = getDb(Astro.locals.runtime?.env?.bagabondo_db);
+const db = getDb(Astro.locals.runtime.env.bagabondo_db);
 if (!db) {
   throw new Error("Database not configured");
 }

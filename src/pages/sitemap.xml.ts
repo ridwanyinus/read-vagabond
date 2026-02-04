@@ -10,7 +10,7 @@ interface SitemapUrl {
 }
 
 export const GET: APIRoute = async ({ locals }) => {
-  const db = getDb(locals.runtime?.env?.bagabondo_db);
+  const db = getDb(locals.runtime.env.bagabondo_db);
   if (!db) {
     return new Response("Database not configured", { status: 500 });
   }

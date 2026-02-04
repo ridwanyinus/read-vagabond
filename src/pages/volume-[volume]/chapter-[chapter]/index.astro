@@ -10,7 +10,7 @@ if (!volumeId || !chapterId) {
   return Astro.redirect("/");
 }
 
-const db = getDb(Astro.locals.runtime?.env?.bagabondo_db);
+const db = getDb(Astro.locals.runtime.env.bagabondo_db);
 if (!db) {
   throw new Error("Database not configured");
 }

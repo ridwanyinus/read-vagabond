@@ -121,23 +121,23 @@ Generated SQL script containing legacy seed data already parsed for the new data
 ### Step 1: Apply Schema Migration
 
 ```bash
-wrangler d1 execute bagabondo-db --file=./drizzle/migrations/0000_complex_mimic.sql
+pnpm wrangler d1 execute bagabondo-db --file=./drizzle/migrations/0000_complex_mimic.sql
 ```
 
 ### Step 2: Apply Seed Data
 
 ```bash
-wrangler d1 execute bagabondo-db --file=./drizzle/migrations/seeds/0000_seed_from_legacy.sql
+pnpm wrangler d1 execute bagabondo-db --file=./seeds/0000_seed_from_legacy.sql
 ```
 
 ### Step 3: Verify Migration
 
 ```bash
 # Check record counts
-wrangler d1 execute bagabondo-db --command="SELECT COUNT(*) FROM authors"
-wrangler d1 execute bagabondo-db --command="SELECT COUNT(*) FROM mangas"
-wrangler d1 execute bagabondo-db --command="SELECT COUNT(*) FROM volumes"
-wrangler d1 execute bagabondo-db --command="SELECT COUNT(*) FROM chapters"
+pnpm wrangler d1 execute bagabondo-db --command="SELECT COUNT(*) FROM authors"
+pnpm wrangler d1 execute bagabondo-db --command="SELECT COUNT(*) FROM mangas"
+pnpm wrangler d1 execute bagabondo-db --command="SELECT COUNT(*) FROM volumes"
+pnpm wrangler d1 execute bagabondo-db --command="SELECT COUNT(*) FROM chapters"
 
 # Expected results:
 # authors: 1
@@ -152,15 +152,15 @@ If you need to revert the migration:
 
 ```bash
 # Drop new tables
-wrangler d1 execute bagabondo-db --command="DROP TABLE chapters"
-wrangler d1 execute bagabondo-db --command="DROP TABLE volumes"
-wrangler d1 execute bagabondo-db --command="DROP TABLE mangas"
-wrangler d1 execute bagabondo-db --command="DROP TABLE authors"
+pnpm wrangler d1 execute bagabondo-db --command="DROP TABLE chapters"
+pnpm wrangler d1 execute bagabondo-db --command="DROP TABLE volumes"
+pnpm wrangler d1 execute bagabondo-db --command="DROP TABLE mangas"
+pnpm wrangler d1 execute bagabondo-db --command="DROP TABLE authors"
 
 # Recreate legacy schema
-wrangler d1 execute bagabondo-db --file=./migrations/deprecated/0001_init.sql
-wrangler d1 execute bagabondo-db --file=./migrations/deprecated/0002_seed_chapters.sql
-wrangler d1 execute bagabondo-db --file=./migrations/deprecated/0004_update_page_count_vizbig.sql
+pnpm wrangler d1 execute bagabondo-db --file=./migrations/deprecated/0001_init.sql
+pnpm wrangler d1 execute bagabondo-db --file=./migrations/deprecated/0002_seed_chapters.sql
+pnpm wrangler d1 execute bagabondo-db --file=./migrations/deprecated/0004_update_page_count_vizbig.sql
 ```
 
 ## Notes

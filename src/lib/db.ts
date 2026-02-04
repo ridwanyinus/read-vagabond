@@ -1,15 +1,16 @@
-import { sql, eq, asc } from "drizzle-orm";
+import { sql, eq, asc, count, countDistinct, min, max } from "drizzle-orm";
 import { chaptersTable, volumesTable } from "../db/schema";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 
 export const getMangaLibraryCounts = async (db: DrizzleD1Database) => {
   const data = await db
     .select({
-      volumeCount: sql<number>`count(distinct ${volumesTable.id})`,
-      chapterCount: sql<number>`count(distinct ${chaptersTable.volumeId} || '-' || ${chaptersTable.number})`,
+      volumeCount: countDistinct(volumesTable.id).as("volumeCount"),
+      chapterCount: sql<number>`(SELECT COUNT(*) FROM ${chaptersTable})`.as(
+        "chapterCount",
+      ),
     })
-    .from(volumesTable)
-    .innerJoin(chaptersTable, eq(chaptersTable.volumeId, volumesTable.id));
+    .from(volumesTable);
   return data[0];
 };
 
@@ -17,10 +18,10 @@ export const getMangaVolumes = async (db: DrizzleD1Database) => {
   const data = await db
     .select({
       number: volumesTable.number,
-      releaseDate: sql<number>`min(${chaptersTable.releaseDate})`,
-      chapterCount: sql<number>`count(distinct ${chaptersTable.number})`,
-      firstChapter: sql<number>`min(${chaptersTable.number})`,
-      lastChapter: sql<number>`max(${chaptersTable.number})`,
+      releaseDate: min(chaptersTable.releaseDate).as("releaseDate"),
+      chapterCount: countDistinct(chaptersTable.number).as("chapterCount"),
+      firstChapter: min(chaptersTable.number).as("firstChapter"),
+      lastChapter: max(chaptersTable.number).as("lastChapter"),
     })
     .from(volumesTable)
     .innerJoin(chaptersTable, eq(chaptersTable.volumeId, volumesTable.id))
@@ -36,10 +37,10 @@ export const getMangaVolumeById = async (
   const data = await db
     .select({
       number: volumesTable.number,
-      releaseDate: sql<number>`min(${chaptersTable.releaseDate})`,
-      chapterCount: sql<number>`count(distinct ${chaptersTable.number})`,
-      firstChapter: sql<number>`min(${chaptersTable.number})`,
-      lastChapter: sql<number>`max(${chaptersTable.number})`,
+      releaseDate: min(chaptersTable.releaseDate).as("releaseDate"),
+      chapterCount: countDistinct(chaptersTable.number).as("chapterCount"),
+      firstChapter: min(chaptersTable.number).as("firstChapter"),
+      lastChapter: max(chaptersTable.number).as("lastChapter"),
     })
     .from(volumesTable)
     .innerJoin(chaptersTable, eq(chaptersTable.volumeId, volumesTable.id))
@@ -53,7 +54,7 @@ export const getMangaChaptersByVolumeId = async (
   volumeId: number,
 ) => {
   const data = await db
-    .selectDistinct({
+    .select({
       number: chaptersTable.number,
       title: chaptersTable.title,
       releaseDate: chaptersTable.releaseDate,

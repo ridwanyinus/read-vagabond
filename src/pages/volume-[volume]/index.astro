@@ -44,8 +44,8 @@ const chaptersFromVolume = await getMangaChaptersByVolumeId(db, +volumeId);
             <VolumeInformation
               volume={volume.number}
               chapterCount={volume.chapterCount}
-              firstChapter={volume.firstChapter}
-              lastChapter={volume.lastChapter}
+              firstChapter={volume.firstChapter ?? 0}
+              lastChapter={volume.lastChapter ?? 0}
               releaseDate={volume.releaseDate}
             />
           </div>

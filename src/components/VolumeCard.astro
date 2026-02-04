@@ -4,7 +4,7 @@ import { buildVolumeCoverUrl } from "../lib/page";
 interface Props {
   volume: number;
   chapterCount: number;
-  releaseDate: number;
+  releaseDate: Date | null;
   firstChapter: number;
   lastChapter: number;
 }
@@ -48,11 +48,12 @@ const { volume, chapterCount, releaseDate, firstChapter, lastChapter } =
                 clip-rule="evenodd"></path>
             </svg>
             {
-              new Date(releaseDate * 1000).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                timeZone: "UTC",
-              })
+              releaseDate !== null &&
+                releaseDate.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  timeZone: "UTC",
+                })
             }
           </p>
         </div>

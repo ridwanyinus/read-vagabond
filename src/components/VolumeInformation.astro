@@ -4,7 +4,7 @@ interface Props {
   chapterCount: number;
   firstChapter: number;
   lastChapter: number;
-  releaseDate: number;
+  releaseDate: Date | null;
 }
 
 const { volume, chapterCount, firstChapter, lastChapter, releaseDate } =
@@ -66,7 +66,7 @@ const { volume, chapterCount, firstChapter, lastChapter, releaseDate } =
           />
         </svg>
         <span>
-          {new Date(releaseDate * 1000).toLocaleDateString("en-US", {
+          {releaseDate.toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric",

@@ -37,8 +37,11 @@ export const GET: APIRoute = async ({ locals }) => {
       priority: "0.8",
     });
 
+    const firstChapter = volume.firstChapter ?? 0;
+    const lastChapter = volume.lastChapter ?? 0;
+
     // Chapter pages for this volume
-    for (let i = volume.firstChapter; i <= volume.lastChapter; i++) {
+    for (let i = firstChapter; i <= lastChapter; i++) {
       urls.push({
         loc: `${siteUrl}/volume-${volume.number}/chapter-${i}`,
         lastmod: new Date().toISOString().split("T")[0],

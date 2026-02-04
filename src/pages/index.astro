@@ -100,8 +100,8 @@ const volumes = await getMangaVolumes(db);
               volume={volume.number}
               chapterCount={volume.chapterCount}
               releaseDate={volume.releaseDate}
-              firstChapter={volume.firstChapter}
-              lastChapter={volume.lastChapter}
+              firstChapter={volume.firstChapter ?? 0}
+              lastChapter={volume.lastChapter ?? 0}
             />
           ))
         }

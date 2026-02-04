@@ -2,7 +2,7 @@
 
 ---
 
-## author
+## authors
 
 | Column     | Type      | Notes            |
 | ---------- | --------- | ---------------- |
@@ -13,13 +13,13 @@
 
 ---
 
-## manga
+## mangas
 
 | Column      | Type      | Notes                        |
 | ----------- | --------- | ---------------------------- |
 | id          | key       | Primary key                  |
-| author_id   | key       | References `author(id)`      |
-| artist_id   | key       | References `author(id)`      |
+| author_id   | key       | References `authors(id)`     |
+| artist_id   | key       | References `authors(id)`     |
 | title       | string    | Manga title                  |
 | description | text      | Manga description            |
 | status      | string    | Ongoing / Completed / Hiatus |
@@ -32,16 +32,16 @@
 
 ---
 
-## volume
+## volumes
 
-| Column       | Type      | Notes                  |
-| ------------ | --------- | ---------------------- |
-| id           | key       | Primary key            |
-| manga_id     | key       | References `manga(id)` |
-| number       | integer   | Volume number          |
-| release_date | date      | Release date           |
-| created_at   | timestamp | Creation time          |
-| updated_at   | timestamp | Last update time       |
+| Column       | Type      | Notes                   |
+| ------------ | --------- | ----------------------- |
+| id           | key       | Primary key             |
+| manga_id     | key       | References `mangas(id)` |
+| number       | integer   | Volume number           |
+| release_date | date      | Release date            |
+| created_at   | timestamp | Creation time           |
+| updated_at   | timestamp | Last update time        |
 
 **Constraints**
 
@@ -49,18 +49,18 @@
 
 ---
 
-## chapter
+## chapters
 
-| Column       | Type      | Notes                   |
-| ------------ | --------- | ----------------------- |
-| id           | key       | Primary key             |
-| volume_id    | key       | References `volume(id)` |
-| title        | string    | Chapter title           |
-| number       | integer   | Chapter number          |
-| page_count   | integer   | Number of pages         |
-| release_date | date      | Release date            |
-| created_at   | timestamp | Creation time           |
-| updated_at   | timestamp | Last update time        |
+| Column       | Type      | Notes                    |
+| ------------ | --------- | ------------------------ |
+| id           | key       | Primary key              |
+| volume_id    | key       | References `volumes(id)` |
+| title        | string    | Chapter title            |
+| number       | integer   | Chapter number           |
+| page_count   | integer   | Number of pages          |
+| release_date | date      | Release date             |
+| created_at   | timestamp | Creation time            |
+| updated_at   | timestamp | Last update time         |
 
 **Constraints**
 

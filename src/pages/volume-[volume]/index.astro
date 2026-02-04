@@ -3,40 +3,39 @@ import ChapterList from "../../components/ChapterList.astro";
 import VolumeCover from "../../components/VolumeCover.astro";
 import VolumeInformation from "../../components/VolumeInformation.astro";
 import MainLayout from "../../layouts/MainLayout.astro";
-import { getVolumeDetails } from "../../lib/db";
+import { getDb } from "../../db/client";
+import { getMangaVolumeById, getMangaChaptersByVolumeId } from "../../lib/db";
 
-const { volume } = Astro.params;
+const { volume: volumeId } = Astro.params;
 
-if (!volume) {
+if (!volumeId) {
   return Astro.redirect("/");
 }
 
-const db = Astro.locals.runtime?.env?.vagabond_db;
+const db = getDb(Astro.locals.runtime?.env?.bagabondo_db);
 if (!db) {
   throw new Error("Database not configured");
 }
 
-const data = await getVolumeDetails(db, volume);
-if (!data) {
-  return Astro.redirect("/");
-}
+const volume = await getMangaVolumeById(db, +volumeId);
+const chaptersFromVolume = await getMangaChaptersByVolumeId(db, +volumeId);
 
 // Confusing. Migrate to query database instead.
-const coverUrl = `https://bucket.readbagabondo.com/covers/volume-${data.volume.volume.toString().padStart(2, "0")}.jpg`;
+const coverUrl = `https://bucket.readbagabondo.com/covers/volume-${volume.number.toString().padStart(2, "0")}.jpg`;
 ---
 
 <MainLayout
-  tagline={`Volume ${data.volume.volume}`}
+  tagline={`Volume ${volume.number}`}
   metadata={{
-    title: `Read Vagabond Manga | Volume ${data.volume.volume}`,
-    description: `Read Vagabond Volume ${data.volume.volume} online for free. Contains ${data.volume.chapter_count} chapters (${data.volume.first_chapter}-${data.volume.last_chapter}). High-quality manga scans from Takehiko Inoue's masterpiece.`,
+    title: `Read Vagabond Manga | Volume ${volume.number}`,
+    description: `Read Vagabond Volume ${volume.number} online for free. Contains ${volume.chapterCount} chapters (${volume.firstChapter}-${volume.lastChapter}). High-quality manga scans from Takehiko Inoue's masterpiece.`,
     keywords: [
-      `Vagabond Volume ${data.volume.volume}`,
-      `Vagabond chapters ${data.volume.first_chapter}-${data.volume.last_chapter}`,
+      `Vagabond Volume ${volume.number}`,
+      `Vagabond chapters ${volume.firstChapter}-${volume.lastChapter}`,
       "Takehiko Inoue",
       "read manga online",
     ],
-    endpoint: `/volume-${data.volume.volume}`,
+    endpoint: `/volume-${volume.number}`,
   }}
 >
   <main class="pt-20">
@@ -44,16 +43,19 @@ const coverUrl = `https://bucket.readbagabondo.com/covers/volume-${data.volume.v
       <div class="max-w-7xl mx-auto px-4 md:px-6 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-15 h-full">
           <div class="flex flex-col lg:w-80">
-            <VolumeCover url={coverUrl} volume={data.volume.volume} />
+            <VolumeCover url={coverUrl} volume={volume.number} />
             <VolumeInformation
-              volume={data.volume.volume}
-              chapterCount={data.volume.chapter_count}
-              firstChapter={data.volume.first_chapter}
-              lastChapter={data.volume.last_chapter}
-              releaseDate={data.volume.release_date}
+              volume={volume.number}
+              chapterCount={volume.chapterCount}
+              firstChapter={volume.firstChapter}
+              lastChapter={volume.lastChapter}
+              releaseDate={volume.releaseDate}
             />
           </div>
-          <ChapterList volume={data.volume} chapters={data.chapters} />
+          <ChapterList
+            volumeNumber={volume.number}
+            chapters={chaptersFromVolume}
+          />
         </div>
       </div>
     </section>

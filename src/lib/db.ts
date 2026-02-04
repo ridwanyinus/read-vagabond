@@ -1,118 +1,81 @@
-type Database = D1Database;
+import { sql, eq, asc } from "drizzle-orm";
+import { chaptersTable, volumesTable } from "../db/schema";
+import type { DrizzleD1Database } from "drizzle-orm/d1";
 
-export async function getMetadata(db: Database) {
-  const result = await db
-    .prepare(
-      `
-      SELECT 
-        COUNT(DISTINCT volume) as tankobon,
-        COUNT(*) as chapters
-      FROM chapters
-    `,
-    )
-    .first<{ tankobon: number; chapters: number }>();
+export const getMangaLibraryCounts = async (db: DrizzleD1Database) => {
+  const data = await db
+    .select({
+      volumeCount: sql<number>`count(distinct ${volumesTable.id})`,
+      chapterCount: sql<number>`count(${chaptersTable.id})`,
+    })
+    .from(volumesTable)
+    .innerJoin(chaptersTable, eq(chaptersTable.volumeId, volumesTable.id));
+  return data[0];
+};
 
-  return result || { tankobon: 0, chapters: 0 };
-}
+export const getMangaVolumes = async (db: DrizzleD1Database) => {
+  const data = await db
+    .select({
+      number: volumesTable.number,
+      releaseDate: sql<number>`min(${chaptersTable.releaseDate})`,
+      chapterCount: sql<number>`count(${chaptersTable.id})`,
+      firstChapter: sql<number>`min(${chaptersTable.number})`,
+      lastChapter: sql<number>`max(${chaptersTable.number})`,
+    })
+    .from(volumesTable)
+    .innerJoin(chaptersTable, eq(chaptersTable.volumeId, volumesTable.id))
+    .groupBy(volumesTable.id, volumesTable.number)
+    .orderBy(asc(volumesTable.number));
+  return data;
+};
 
-export async function getVolumes(db: Database) {
-  const result = await db
-    .prepare(
-      `
-      SELECT
-        volume,
-        MIN(release_date) as release_date,
-        COUNT(*) as chapter_count,
-        MIN(number) as first_chapter,
-        MAX(number) as last_chapter
-      FROM chapters
-      WHERE volume IS NOT NULL
-      GROUP BY volume
-      ORDER BY volume ASC
-    `,
-    )
-    .all<{
-      volume: number;
-      release_date: string;
-      chapter_count: number;
-      first_chapter: number;
-      last_chapter: number;
-    }>();
+export const getMangaVolumeById = async (
+  db: DrizzleD1Database,
+  volumeId: number,
+) => {
+  const data = await db
+    .select({
+      number: volumesTable.number,
+      releaseDate: sql<number>`min(${chaptersTable.releaseDate})`,
+      chapterCount: sql<number>`count(${chaptersTable.id})`,
+      firstChapter: sql<number>`min(${chaptersTable.number})`,
+      lastChapter: sql<number>`max(${chaptersTable.number})`,
+    })
+    .from(volumesTable)
+    .innerJoin(chaptersTable, eq(chaptersTable.volumeId, volumesTable.id))
+    .where(eq(volumesTable.id, volumeId))
+    .groupBy(volumesTable.id, volumesTable.number);
+  return data[0];
+};
 
-  return result?.results || [];
-}
+export const getMangaChaptersByVolumeId = async (
+  db: DrizzleD1Database,
+  volumeId: number,
+) => {
+  const data = await db
+    .select({
+      number: chaptersTable.number,
+      title: chaptersTable.title,
+      releaseDate: chaptersTable.releaseDate,
+    })
+    .from(chaptersTable)
+    .where(eq(chaptersTable.volumeId, volumeId))
+    .orderBy(asc(chaptersTable.number));
+  return data;
+};
 
-export async function getVolumeDetails(
-  db: Database,
-  volumeNumber: string | number,
-) {
-  const volumeData = await db
-    .prepare(
-      `
-      SELECT 
-        volume,
-        MIN(number) as first_chapter,
-        MAX(number) as last_chapter,
-        COUNT(*) as chapter_count,
-        MIN(release_date) as release_date
-      FROM chapters 
-      WHERE volume = ?
-      GROUP BY volume
-    `,
-    )
-    .bind(volumeNumber)
-    .first<{
-      volume: number;
-      first_chapter: number;
-      last_chapter: number;
-      chapter_count: number;
-      release_date: string;
-    }>();
-
-  if (!volumeData) {
-    return null;
-  }
-
-  const chapters = await db
-    .prepare(
-      `
-      SELECT number, title, description, release_date 
-      FROM chapters 
-      WHERE volume = ? 
-      ORDER BY number ASC
-    `,
-    )
-    .bind(volumeNumber)
-    .all<{
-      number: number;
-      title: string;
-      description: string | null;
-      release_date: string;
-    }>();
-
-  return {
-    volume: volumeData,
-    chapters: chapters?.results || [],
-  };
-}
-
-export async function getChapterDetails(
-  db: Database,
-  chapterNumber: string | number,
-) {
-  const chapter = await db
-    .prepare(`SELECT * FROM chapters WHERE number = ?`)
-    .bind(chapterNumber)
-    .first<{
-      id: number;
-      number: number;
-      title: string;
-      description: string | null;
-      volume: number;
-      release_date: string;
-      page_count: number;
-      created_at: string;
-    }>();
-
-  return chapter;
-}
+export const getMangaChapterById = async (
+  db: DrizzleD1Database,
+  chapterId: number,
+) => {
+  const data = await db
+    .select({
+      title: chaptersTable.title,
+      number: chaptersTable.number,
+      pageCount: chaptersTable.pageCount,
+      releaseDate: chaptersTable.releaseDate,
+    })
+    .from(chaptersTable)
+    .where(eq(chaptersTable.id, chapterId));
+  return data[0];
+};

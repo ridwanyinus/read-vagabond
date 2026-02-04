@@ -8,6 +8,7 @@ declare namespace App {
   interface Locals {
     runtime: {
       env: {
+        bagabondo_db: D1Database;
         vagabond_db: D1Database;
       };
     };

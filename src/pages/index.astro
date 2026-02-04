@@ -1,22 +1,23 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
 import VolumeCard from "../components/VolumeCard.astro";
-import { getMetadata, getVolumes } from "../lib/db";
+import { getDb } from "../db/client";
+import { getMangaLibraryCounts, getMangaVolumes } from "../lib/db";
 
-const db = Astro.locals.runtime?.env?.vagabond_db;
+const db = getDb(Astro.locals.runtime?.env?.bagabondo_db);
 if (!db) {
   throw new Error("Database not configured");
 }
 
-const metadata = await getMetadata(db);
-const volumes = await getVolumes(db);
+const { volumeCount, chapterCount } = await getMangaLibraryCounts(db);
+const volumes = await getMangaVolumes(db);
 ---
 
 <MainLayout
   tagline="High-quality Scans of All Chapters"
   metadata={{
     title: "Read Vagabond Manga | High-quality Scans of All Chapters",
-    description: `Free, high-quality Vagabond manga reader. All ${metadata.chapters} chapters of Takehiko Inoue's masterpiece. No ads, no signup.`,
+    description: `Free, high-quality Vagabond manga reader. All ${chapterCount} chapters of Takehiko Inoue's masterpiece. No ads, no signup.`,
     keywords: [
       "Vagabond manga",
       "read Vagabond online",
@@ -83,11 +84,11 @@ const volumes = await getVolumes(db);
       <div class="flex justify-center gap-2 mb-8">
         <span
           class="bg-gray-100 text-gray-800 text-sm font-medium px-3 py-1 rounded"
-          >{metadata.tankobon} volumes</span
+          >{volumeCount} volumes</span
         >
         <span
           class="bg-gray-100 text-gray-800 text-sm font-medium px-3 py-1 rounded"
-          >{metadata.chapters} chapters</span
+          >{chapterCount} chapters</span
         >
       </div>
       <div
@@ -96,11 +97,11 @@ const volumes = await getVolumes(db);
         {
           volumes.map((volume) => (
             <VolumeCard
-              volume={volume.volume}
-              chapterCount={volume.chapter_count}
-              releaseDate={volume.release_date}
-              firstChapter={volume.first_chapter}
-              lastChapter={volume.last_chapter}
+              volume={volume.number}
+              chapterCount={volume.chapterCount}
+              releaseDate={volume.releaseDate}
+              firstChapter={volume.firstChapter}
+              lastChapter={volume.lastChapter}
             />
           ))
         }

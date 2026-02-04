@@ -6,7 +6,7 @@ export const getMangaLibraryCounts = async (db: DrizzleD1Database) => {
   const data = await db
     .select({
       volumeCount: sql<number>`count(distinct ${volumesTable.id})`,
-      chapterCount: sql<number>`count(${chaptersTable.id})`,
+      chapterCount: sql<number>`count(distinct ${chaptersTable.volumeId} || '-' || ${chaptersTable.number})`,
     })
     .from(volumesTable)
     .innerJoin(chaptersTable, eq(chaptersTable.volumeId, volumesTable.id));
@@ -18,7 +18,7 @@ export const getMangaVolumes = async (db: DrizzleD1Database) => {
     .select({
       number: volumesTable.number,
       releaseDate: sql<number>`min(${chaptersTable.releaseDate})`,
-      chapterCount: sql<number>`count(${chaptersTable.id})`,
+      chapterCount: sql<number>`count(distinct ${chaptersTable.number})`,
       firstChapter: sql<number>`min(${chaptersTable.number})`,
       lastChapter: sql<number>`max(${chaptersTable.number})`,
     })
@@ -37,7 +37,7 @@ export const getMangaVolumeById = async (
     .select({
       number: volumesTable.number,
       releaseDate: sql<number>`min(${chaptersTable.releaseDate})`,
-      chapterCount: sql<number>`count(${chaptersTable.id})`,
+      chapterCount: sql<number>`count(distinct ${chaptersTable.number})`,
       firstChapter: sql<number>`min(${chaptersTable.number})`,
       lastChapter: sql<number>`max(${chaptersTable.number})`,
     })
@@ -53,7 +53,7 @@ export const getMangaChaptersByVolumeId = async (
   volumeId: number,
 ) => {
   const data = await db
-    .select({
+    .selectDistinct({
       number: chaptersTable.number,
       title: chaptersTable.title,
       releaseDate: chaptersTable.releaseDate,

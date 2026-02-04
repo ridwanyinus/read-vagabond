@@ -26,6 +26,10 @@
 | created_at  | timestamp | Creation time                |
 | updated_at  | timestamp | Last update time             |
 
+**Constraints**
+
+- `UNIQUE (author_id, title)`
+
 ---
 
 ## volume
@@ -38,6 +42,10 @@
 | release_date | date      | Release date           |
 | created_at   | timestamp | Creation time          |
 | updated_at   | timestamp | Last update time       |
+
+**Constraints**
+
+- `UNIQUE (manga_id, number)`
 
 ---
 
@@ -53,3 +61,7 @@
 | release_date | date      | Release date            |
 | created_at   | timestamp | Creation time           |
 | updated_at   | timestamp | Last update time        |
+
+**Constraints**
+
+- `UNIQUE (volume_id, number)`

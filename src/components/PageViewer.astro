@@ -1,22 +1,12 @@
 ---
 export interface Props {
   pagesUrl: string[];
-  volume: number;
-  prevChapter: number | null;
-  nextChapter: number | null;
 }
 
-const { pagesUrl, volume, prevChapter, nextChapter } = Astro.props;
+const { pagesUrl } = Astro.props;
 ---
 
-<!-- TODO: use data attributes to pass volume and chapter info to the script -->
-<div
-  class="min-h-screen bg-white flex flex-col items-center pt-20 md:pt-24"
-  id="pageContainer"
-  data-volume={volume}
-  data-prev-chapter={prevChapter}
-  data-next-chapter={nextChapter}
->
+<div class="min-h-screen bg-white flex flex-col items-center pt-20 md:pt-24">
   <div class="w-full max-w-350 flex flex-col items-center">
     {
       pagesUrl.map((pageUrl, index) => (

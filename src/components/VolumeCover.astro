@@ -1,16 +1,17 @@
 ---
+import { buildVolumeCoverUrl } from "../lib/page";
+
 interface Props {
-  url: string;
   volume: number;
 }
 
-const { url, volume } = Astro.props;
+const { volume } = Astro.props;
 ---
 
 <div class="mb-6">
   <div class="aspect-2/3 relative overflow-hidden rounded-xl shadow-2xl">
     <img
-      src={url}
+      src={buildVolumeCoverUrl(volume)}
       alt={`Volume ${volume} Cover`}
       class="w-full h-full object-cover"
     />

@@ -2,6 +2,7 @@
 import ChapterLayout from "../../../layouts/ChapterLayout.astro";
 import { getDb } from "../../../db/client";
 import { getMangaVolumeById, getMangaChapterById } from "../../../lib/db";
+import { buildPageUrl } from "../../../lib/page";
 
 const { volume: volumeId, chapter: chapterId } = Astro.params;
 
@@ -21,12 +22,13 @@ const prevChapter = chapter.number > 1 ? chapter.number - 1 : null;
 const nextChapter =
   chapter.number < volume.chapterCount ? chapter.number + 1 : null;
 
-const pagesUrl = Array.from({ length: chapter.pageCount }).map((_, i) => {
-  const volumeStr = volumeId.padStart(2, "0");
-  const chapterStr = chapter.number.toString().padStart(3, "0");
-  const pageStr = (i + 1).toString().padStart(3, "0");
-  return `https://bucket.readbagabondo.com/volume-${volumeStr}/chapter-${chapterStr}/page-${pageStr}.png`;
-});
+const pagesUrl = Array.from({ length: chapter.pageCount }, (_, i) =>
+  buildPageUrl({
+    volume: +volumeId,
+    chapter: chapter.number,
+    page: i + 1,
+  }),
+);
 ---
 
 <ChapterLayout

@@ -19,9 +19,6 @@ if (!db) {
 
 const volume = await getMangaVolumeById(db, +volumeId);
 const chaptersFromVolume = await getMangaChaptersByVolumeId(db, +volumeId);
-
-// Confusing. Migrate to query database instead.
-const coverUrl = `https://bucket.readbagabondo.com/covers/volume-${volume.number.toString().padStart(2, "0")}.jpg`;
 ---
 
 <MainLayout
@@ -43,7 +40,7 @@ const coverUrl = `https://bucket.readbagabondo.com/covers/volume-${volume.number
       <div class="max-w-7xl mx-auto px-4 md:px-6 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-15 h-full">
           <div class="flex flex-col lg:w-80">
-            <VolumeCover url={coverUrl} volume={volume.number} />
+            <VolumeCover volume={volume.number} />
             <VolumeInformation
               volume={volume.number}
               chapterCount={volume.chapterCount}

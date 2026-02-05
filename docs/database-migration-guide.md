@@ -146,23 +146,6 @@ pnpm wrangler d1 execute bagabondo-db --command="SELECT COUNT(*) FROM chapters"
 # chapters: 322
 ```
 
-## Rolling Back
-
-If you need to revert the migration:
-
-```bash
-# Drop new tables
-pnpm wrangler d1 execute bagabondo-db --command="DROP TABLE chapters"
-pnpm wrangler d1 execute bagabondo-db --command="DROP TABLE volumes"
-pnpm wrangler d1 execute bagabondo-db --command="DROP TABLE mangas"
-pnpm wrangler d1 execute bagabondo-db --command="DROP TABLE authors"
-
-# Recreate legacy schema
-pnpm wrangler d1 execute bagabondo-db --file=./migrations/deprecated/0001_init.sql
-pnpm wrangler d1 execute bagabondo-db --file=./migrations/deprecated/0002_seed_chapters.sql
-pnpm wrangler d1 execute bagabondo-db --file=./migrations/deprecated/0004_update_page_count_vizbig.sql
-```
-
 ## Notes
 
 - The migration uses subqueries `(SELECT id FROM volumes WHERE number = X)` to resolve foreign keys

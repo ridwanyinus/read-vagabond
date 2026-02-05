@@ -4,12 +4,11 @@
 
 ## authors
 
-| Column     | Type      | Notes            |
-| ---------- | --------- | ---------------- |
-| id         | key       | Primary key      |
-| name       | string    | Author name      |
-| created_at | timestamp | Creation time    |
-| updated_at | timestamp | Last update time |
+| Column     | Type      | Notes         |
+| ---------- | --------- | ------------- |
+| id         | key       | Primary key   |
+| name       | string    | Author name   |
+| created_at | timestamp | Creation time |
 
 ---
 
@@ -24,7 +23,6 @@
 | description | text      | Manga description            |
 | status      | string    | Ongoing / Completed / Hiatus |
 | created_at  | timestamp | Creation time                |
-| updated_at  | timestamp | Last update time             |
 
 **Constraints**
 
@@ -41,7 +39,6 @@
 | number       | integer   | Volume number           |
 | release_date | date      | Release date            |
 | created_at   | timestamp | Creation time           |
-| updated_at   | timestamp | Last update time        |
 
 **Constraints**
 
@@ -60,7 +57,6 @@
 | page_count   | integer   | Number of pages          |
 | release_date | date      | Release date             |
 | created_at   | timestamp | Creation time            |
-| updated_at   | timestamp | Last update time         |
 
 **Constraints**
 

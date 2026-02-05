@@ -100,7 +100,7 @@ Located in `drizzle/migrations/0000_complex_mimic.sql`:
 
 ## Generated Migration Files
 
-### `drizzle/migrations/0001_seed_data.sql`
+### `seeds/0001_seed_data.sql`
 
 Auto-generated SQL script containing:
 

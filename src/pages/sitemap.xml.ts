@@ -37,8 +37,12 @@ export const GET: APIRoute = async ({ locals }) => {
       priority: "0.8",
     });
 
-    const firstChapter = volume.firstChapter ?? 0;
-    const lastChapter = volume.lastChapter ?? 0;
+    const firstChapter = volume.firstChapter;
+    const lastChapter = volume.lastChapter;
+
+    if (firstChapter == null || lastChapter == null) {
+      continue;
+    }
 
     // Chapter pages for this volume
     for (let i = firstChapter; i <= lastChapter; i++) {

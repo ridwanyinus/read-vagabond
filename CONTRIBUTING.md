@@ -46,11 +46,12 @@ We're actively working on these high-impact features:
 
 - **Current Status**: Mihon API v1 is being sunsetted with limitations and workarounds
 - **Timeline**: 1-2 months for complete transition to Mihon API v2
-- **Current Target**: All API improvements target `feature/mihon-api-v2` branch
+- **Current Target**: All API improvements target `feat/mihon-api-v2` branch
 
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - pnpm package manager
 - Git
@@ -69,28 +70,26 @@ pnpm install
 
 # 4. Set up local D1 database (required for development)
 # The database will be created locally and persisted in .wrangler/state
-npx wrangler d1 execute vagabond-db --local --file=./migrations/0001_init.sql
-npx wrangler d1 execute vagabond-db --local --file=./migrations/0002_seed_chapters.sql
-npx wrangler d1 execute vagabond-db --local --file=./migrations/0003_update_page_count.sql
-npx wrangler d1 execute vagabond-db --local --file=./migrations/0004_update_page_count_vizbig.sql
+pnpm wrangler d1 execute bagabondo-db --local --file=./drizzle/migrations/0000_complex_mimic.sql
+pnpm wrangler d1 execute bagabondo-db --local --file=./seeds/0000_seed_from_legacy.sql
 
 # 5. Checkout appropriate branch for your contribution
 git checkout dev  # All current contributions target dev branch
 
-# 6. Create feature branch
+# 6. Create feat branch
 # For features:
-git checkout -b feature/single-page-reader
-git checkout -b feature/dark-mode
-git checkout -b feature/comment-system
-git checkout -b feature/chapter-selection
+git checkout -b feat/single-page-reader
+git checkout -b feat/dark-mode
+git checkout -b feat/comment-system
+git checkout -b feat/chapter-selection
 
 # For API work:
 git checkout -b mihon-api-v2/infrastructure
 git checkout -b mihon-api-v2/endpoints
 
 # 7. Start development server
-pnpm dev          # Local development server with D1 database
-wrangler dev      # Local development with Workers runtime and D1 database
+pnpm dev               # Local development server with D1 database
+pnpm wrangler dev      # Local development with Workers runtime and D1 database
 ```
 
 ### Database Setup Details
@@ -99,39 +98,51 @@ The application uses Cloudflare D1 database for storing chapter metadata. For lo
 
 - **Local Database**: Runs in memory using `wrangler d1 execute --local`
 - **Database Files**: Migrations are in the `migrations/` directory
-- **Database Name**: `vagabond-db` (configured in `wrangler.jsonc`)
+- **Database Name**: `bagabondo-db` (configured in `wrangler.jsonc`)
 - **Persistence**: Local database state is stored in `.wrangler/state/` directory
 
 **Running Migrations**:
+
 ```bash
 # Run all migrations at once
-for migration in migrations/*.sql; do
-  npx wrangler d1 execute vagabond-db --local --file="$migration"
+for migration in drizzle/migrations/*.sql; do
+  pnpm wrangler d1 execute bagabondo-db --local --file="$migration"
+done
+
+# Run all seeds at once
+for seeds in seeds/*.sql; do
+  pnpm wrangler d1 execute bagabondo-db --local --file="$seeds"
 done
 
 # Or run individual migrations
-npx wrangler d1 execute vagabond-db --local --file=./migrations/0001_init.sql
-npx wrangler d1 execute vagabond-db --local --file=./migrations/0002_seed_chapters.sql
+pnpm wrangler d1 execute bagabondo-db --local --file=./drizzle/migrations/0000_complex_mimic.sql
+pnpm wrangler d1 execute bagabondo-db --local --file=./seeds/0000_seed_from_legacy.sql
 ```
 
 **Reset Local Database** (if needed):
+
 ```bash
 # Remove local database state
 rm -rf .wrangler/state/
 
 # Re-run migrations
-for migration in migrations/*.sql; do
-  npx wrangler d1 execute vagabond-db --local --file="$migration"
+for migration in drizzle/migrations/*.sql; do
+  pnpm wrangler d1 execute bagabondo-db --local --file="$migration"
+done
+
+# Re-run seeds
+for seeds in seeds/*.sql; do
+  pnpm wrangler d1 execute bagabondo-db --local --file="$seeds"
 done
 ```
 
 ### Development Commands
 
 ```bash
-pnpm dev          # Start local development server with D1 database
-pnpm build        # Build for production
-pnpm preview      # Preview production build locally
-wrangler dev      # Local development with Workers runtime and D1 database
+pnpm dev               # Start local development server with D1 database
+pnpm build             # Build for production
+pnpm preview           # Preview production build locally
+pnpm wrangler dev      # Local development with Workers runtime and D1 database
 ```
 
 ### Cloudflare Authentication (Optional)
@@ -141,9 +152,10 @@ wrangler dev      # Local development with Workers runtime and D1 database
 - **For Remote Database Testing**: Cloudflare account needed for `wrangler d1 execute --remote`
 
 **Login to Cloudflare (when needed)**:
+
 ```bash
-npx wrangler login    # Login to Cloudflare account
-npx wrangler whoami    # Verify authentication
+pnpm wrangler login     # Login to Cloudflare account
+pnpm wrangler whoami    # Verify authentication
 ```
 
 ## Feature-Specific Implementation Guidelines
@@ -154,6 +166,7 @@ npx wrangler whoami    # Verify authentication
 **Target State**: Single page horizontal navigation with LTR/RTL support
 
 **Technical Requirements**:
+
 - Use canvas for page rendering (not image elements)
 - Implement page flip transitions between pages
 - Add thumbnail navigation panel (sidebar or bottom)
@@ -163,8 +176,9 @@ npx wrangler whoami    # Verify authentication
 - Performance: Preload next/previous pages for smooth transitions
 
 **Files to Modify**:
+
 - `src/pages/volume-[volume]/chapter-[chapter]/index.astro` (main reading interface)
-- `src/features/reading/` (add reading direction context)
+- `src/feature/reading/` (add reading direction context)
 - `src/styles/global.css` (add canvas and transition styles)
 
 ### Dark Mode Implementation
@@ -173,6 +187,7 @@ npx wrangler whoami    # Verify authentication
 **Target State**: Manual dark mode toggle with persistence
 
 **Technical Requirements**:
+
 - Create theme context/store for state management
 - Add dark mode classes to Tailwind configuration
 - Implement theme toggle UI component
@@ -180,7 +195,8 @@ npx wrangler whoami    # Verify authentication
 - Update all page templates to use theme classes
 
 **Files to Modify**:
-- `src/features/theme/` (add theme context)
+
+- `src/feature/theme/` (add theme context)
 - `src/styles/global.css` (dark mode CSS variables)
 - All page templates (add theme class bindings)
 
@@ -190,14 +206,16 @@ npx wrangler whoami    # Verify authentication
 **Target State**: Per chapter and volume discussions
 
 **Technical Requirements**:
+
 - Design database schema for comments (users, comments, reactions)
 - Create API routes for CRUD operations
 - Build comment UI components using Tailwind/Flowbite
 - Integrate with existing chapter/volume structure
 
 **Files to Create/Modify**:
+
 - `migrations/` (add comment database schema)
-- `src/features/comments/` (add comment functions)
+- `src/feature/comments/` (add comment functions)
 - Page templates (add comment components)
 
 ### Chapter Selection UI Implementation
@@ -206,11 +224,13 @@ npx wrangler whoami    # Verify authentication
 **Target State**: Chapter selection within reading interface
 
 **Technical Requirements**:
+
 - Add chapter navigation dropdown/sidebar in reader
 - Display reading progress per chapter
 - Integrate with existing volume/chapter data structure
 
 **Files to Modify**:
+
 - `src/pages/volume-[volume]/chapter-[chapter]/index.astro` (add chapter selector)
 
 ### Mihon API v2 Development
@@ -219,29 +239,33 @@ npx wrangler whoami    # Verify authentication
 **Target State**: Redesigned API supporting multiple works and localization
 
 **Technical Requirements**:
+
 - Remove hardcoded values and workarounds
 - Design flexible API structure for multiple manga works
 - Support for multi-language/localization
 - Integration with manga reader applications
 
-
 ## Branch Strategy & Submission Process
 
 ### Branch Structure
+
 - `main`: Stable production (auto-deploys to Cloudflare)
 - `dev`: All development work (features + API v2)
-- `feature/mihon-api-v2`: Future dedicated API branch (currently in idea phase)
+- `feat/mihon-api-v2`: Future dedicated API branch (currently in idea phase)
 
 ### Targeting Rules
+
 - **All current contributions**: Target `dev` branch
-- **Future API v2 dedicated work**: Will target `feature/mihon-api-v2` branch
+- **Future API v2 dedicated work**: Will target `feat/mihon-api-v2` branch
 
 ### Branch Naming Conventions
-- Features: `feature/single-page-reader`, `feature/dark-mode`
+
+- Features: `feat/single-page-reader`, `feat/dark-mode`
 - API work: `mihon-api-v2/infrastructure`, `mihon-api-v2/endpoints`
 - Bug fixes: `fix/reading-progress`, `fix/navigation-issue`
 
 ### Pull Request Workflow
+
 1. Fork the repository
 2. Clone your fork locally
 3. Checkout `dev` branch
@@ -252,14 +276,16 @@ npx wrangler whoami    # Verify authentication
 8. `dev` to `main` merge triggers automatic Cloudflare deployment
 
 ### Merge Strategy
+
 - Current: All work merges to `dev`
-- Future: Once Mihon API v2 is complete and `feature/mihon-api-v2` branch is active:
+- Future: Once Mihon API v2 is complete and `feat/mihon-api-v2` branch is active:
   - Mihon API v2 branch will be merged back to `dev` for integration
   - Then `dev` to `main` for automatic Cloudflare deployment
 
 ## Technical Guidelines
 
 ### Code Style & Standards
+
 - Follow detailed guidelines in [AGENTS.md](./AGENTS.md)
 - Use TypeScript strict mode
 - Follow Astro SSR patterns
@@ -268,6 +294,7 @@ npx wrangler whoami    # Verify authentication
 - Mobile-first responsive design approach
 
 ### Database Operations
+
 - Use D1 database with proper connection handling
 - Always validate database exists before use
 - Use prepared statements with parameter binding
@@ -275,6 +302,7 @@ npx wrangler whoami    # Verify authentication
 - Use TypeScript generics for query result typing
 
 ### API Development
+
 - Export typed functions: `GET`, `POST`, etc. of type `APIRoute`
 - Return proper HTTP status codes
 - Set appropriate `Content-Type` headers
@@ -282,6 +310,7 @@ npx wrangler whoami    # Verify authentication
 - Use JSON error responses with descriptive messages
 
 ### Security Best Practices
+
 - Sanitize all user input and URL parameters
 - Use parameterized queries for database operations
 - Validate route parameters before processing
@@ -293,11 +322,13 @@ npx wrangler whoami    # Verify authentication
 We follow **Conventional Commits** format to maintain consistency and enable automated changelog generation.
 
 ### Format
+
 ```
 <type>: <description>
 ```
 
 ### Types
+
 - `feat`: New features
 - `fix`: Bug fixes
 - `docs`: Documentation changes
@@ -308,6 +339,7 @@ We follow **Conventional Commits** format to maintain consistency and enable aut
 - `perf`: Performance improvements
 
 ### Examples
+
 - `feat: implement single page canvas rendering`
 - `fix: resolve chapter data timeout issue`
 - `docs: update setup instructions for local dev`
@@ -322,17 +354,20 @@ We follow **Conventional Commits** format to maintain consistency and enable aut
 PR titles follow the same format as commit messages for consistency.
 
 ### Format
+
 ```
 <type>: <description>
 ```
 
 ### Guidelines
+
 - Keep titles under 72 characters
 - Use present tense ("add" not "added")
 - Include issue numbers when applicable
 - Be specific about what the PR does
 
 ### Examples
+
 - `feat: add LTR/RTL reading direction support`
 - `fix: resolve chapter count calculation error`
 - `docs: update Mihon API v2 documentation`
@@ -347,95 +382,120 @@ Clear PR descriptions help reviewers understand your changes quickly. Use this t
 
 ```markdown
 ## Problem/Motivation
+
 Brief description of what problem this change addresses and why it's needed.
 
 ## Implementation
+
 How the change was implemented, including technical details and any important decisions made.
 
 ## Testing
+
 How this was tested:
+
 - Manual testing steps performed
 - Devices/browsers checked
 - Specific functionality verified
 
 ## Breaking Changes
+
 List any breaking changes or note "None" if there are none.
 
 ## Related Issues
+
 Closes #123, Related to #456, or "None"
 ```
 
 ### Examples by Contribution Type
 
 **Feature Example:**
+
 ```markdown
 ## Problem/Motivation
+
 Users currently cannot switch between chapters without returning to volume page, creating a poor reading experience.
 
 ## Implementation
+
 Added chapter selection dropdown in reader sidebar that:
+
 - Fetches all chapters from current volume
 - Maintains current reading position
 - Updates URL for bookmarking
 - Includes reading progress indicators
 
 ## Testing
+
 - Tested chapter navigation in volume 4
 - Verified dropdown works on mobile and desktop
 - Confirmed reading position is preserved
 - Checked bookmark functionality with new URLs
 
 ## Breaking Changes
+
 None
 
 ## Related Issues
+
 Closes #87
 ```
 
 **Bug Fix Example:**
+
 ```markdown
 ## Problem/Motivation
+
 Chapter pages were not loading correctly due to database timeout issue after 30 seconds.
 
 ## Implementation
+
 - Added connection timeout handling in database queries
 - Implemented retry mechanism for failed requests
 - Added proper error messaging for users
 
 ## Testing
+
 - Reproduced original timeout issue
 - Verified fix works consistently
 - Tested error handling scenarios
 - Checked mobile and desktop compatibility
 
 ## Breaking Changes
+
 None
 
 ## Related Issues
+
 Closes #92
 ```
 
 **API Development Example:**
+
 ```markdown
 ## Problem/Motivation
+
 Mihon API v1 has hardcoded values that prevent multi-language support and future expansion.
 
 ## Implementation
+
 - Refactored API structure to support dynamic manga data
 - Added language parameter support
 - Implemented new endpoint for manga metadata
 - Updated response format for compatibility
 
 ## Testing
+
 - Tested with existing Mihon client applications
 - Verified backward compatibility
 - Checked new language parameter functionality
 - Validated response format matches expected schema
 
 ## Breaking Changes
+
 API response format updated (backward compatible)
 
 ## Related Issues
+
 Related to #45, Part of Mihon API v2 roadmap
 ```
 
@@ -449,6 +509,7 @@ Currently, this project uses manual testing rather than automated tests:
 4. **Workers Testing**: Use `wrangler dev` for Cloudflare deployment testing
 
 Before submitting a PR, please ensure:
+
 - Your changes work as expected
 - UI is responsive across different screen sizes
 - API endpoints return correct responses
@@ -457,11 +518,13 @@ Before submitting a PR, please ensure:
 ## Deployment Process
 
 ### Automated Cloudflare Deployment
+
 - **Trigger**: Any new commit to `main` branch
 - **Process**: Automatic deployment via Cloudflare Pages/Workers integration
 - **No manual deployment needed**: Cloudflare handles production deployment automatically
 
 ### Development Deployment Flow
+
 1. **Development**: `pnpm dev` for local Astro development
 2. **Workers Testing**: `wrangler dev` for Cloudflare Workers runtime testing
 3. **Production**: Merge `dev` to `main` triggers automatic Cloudflare deployment
@@ -469,31 +532,37 @@ Before submitting a PR, please ensure:
 ## Community & Support
 
 ### Response Time Expectations
+
 - PR reviews: Typically within 1-2 weeks
 - Issue responses: Within 1 week for questions, sooner for bugs
 - Feature requests: Will be evaluated against project roadmap
 
 ### Communication Channels
+
 - GitHub Issues: Bug reports, feature requests, questions
 - Pull Requests: Code contributions and reviews
 
 ### Security Disclosures
+
 If you find a security vulnerability, do NOT open an issue. Please report it responsibly through appropriate channels.
 
 ## Important Disclaimers
 
 ### Licensing
+
 - **Code**: Licensed under MIT License
 - **Content**: No manga scans provided, respect copyright
 - **Manga**: Vagabond © Takehiko Inoue / Kodansha
 
 ### Contribution Boundaries
+
 - Code contributions are welcome and encouraged
 - Do not submit manga scans or copyrighted content
 - Respect licensing terms and copyright notices
 - Focus on improving the reader application functionality
 
 ### Legal Notice
+
 This site is unofficial and provides content for personal reference only. All rights remain with the original creators and publishers. Please support the official editions.
 
 ---

@@ -1,59 +1,57 @@
 ---
 import ChapterLayout from "../../../layouts/ChapterLayout.astro";
-import { getChapterDetails, getMetadata } from "../../../lib/db";
+import { getDb } from "../../../db/client";
+import { getMangaVolumeById, getMangaChapterById } from "../../../lib/db";
+import { buildPageUrl } from "../../../lib/page";
 
-const { volume, chapter } = Astro.params;
+const { volume: volumeId, chapter: chapterId } = Astro.params;
 
-if (!volume || !chapter) {
+if (!volumeId || !chapterId) {
   return Astro.redirect("/");
 }
 
-const db = Astro.locals.runtime?.env?.vagabond_db;
+const db = getDb(Astro.locals.runtime.env.bagabondo_db);
 if (!db) {
   throw new Error("Database not configured");
 }
 
-const currentChapter = await getChapterDetails(db, chapter);
-if (!currentChapter) {
-  return Astro.redirect("/");
-}
+const volume = await getMangaVolumeById(db, +volumeId);
+const chapter = await getMangaChapterById(db, +chapterId);
 
-const metadata = await getMetadata(db);
+const firstChapter = volume.firstChapter ?? 0;
+const lastChapter = volume.lastChapter ?? 0;
 
-const chapterNum = parseInt(chapter || "1");
-const prevChapter = chapterNum > 1 ? chapterNum - 1 : null;
-const nextChapter = chapterNum < metadata.chapters ? chapterNum + 1 : null;
+const prevChapter = chapter.number > firstChapter ? chapter.number - 1 : null;
+const nextChapter = chapter.number < lastChapter ? chapter.number + 1 : null;
 
-const pages = Array.from(
-  { length: currentChapter.page_count },
-  (_, i) => i + 1,
-).map((pageNumber) => {
-  const volumeStr = volume?.padStart(2, "0");
-  const numberStr = currentChapter.number.toString().padStart(3, "0");
-  const pageStr = pageNumber.toString().padStart(3, "0");
-  return `https://bucket.readbagabondo.com/volume-${volumeStr}/chapter-${numberStr}/page-${pageStr}.png`;
-});
+const pagesUrl = Array.from({ length: chapter.pageCount }, (_, i) =>
+  buildPageUrl({
+    volume: +volumeId,
+    chapter: chapter.number,
+    page: i + 1,
+  }),
+);
 ---
 
 <ChapterLayout
-  tagline={`Volume ${volume} - Chapter ${currentChapter.number} - ${currentChapter.title}`}
+  tagline={`Volume ${volumeId} - Chapter ${chapter.number} - ${chapter.title}`}
   metadata={{
-    title: `Read Vagabond Manga | Volume ${volume} - Chapter ${currentChapter.number} - ${currentChapter.title}`,
-    description: `Read Vagabond Chapter ${currentChapter.number}: ${currentChapter.title} online for free. ${currentChapter.page_count} pages of high-quality manga from Takehiko Inoue's masterpiece.`,
+    title: `Read Vagabond Manga | Volume ${volumeId} - Chapter ${chapter.number} - ${chapter.title}`,
+    description: `Read Vagabond Chapter ${chapter.number}: ${chapter.title} online for free. ${chapter.pageCount} pages of high-quality manga from Takehiko Inoue's masterpiece.`,
     keywords: [
-      `Vagabond Chapter ${currentChapter.number}`,
-      `${currentChapter.title}`,
+      `Vagabond Chapter ${chapter.number}`,
+      `${chapter.title}`,
       "read manga online",
       "Takehiko Inoue",
-      `Vagabond Volume ${volume}`,
+      `Vagabond Volume ${volumeId}`,
     ],
-    endpoint: `/volume-${volume}/chapter-${currentChapter.number}`,
+    endpoint: `/volume-${volumeId}/chapter-${chapter.number}`,
   }}
-  volume={parseInt(volume)}
+  volume={+volumeId}
   chapter={{
-    number: currentChapter.number,
-    title: currentChapter.title,
-    pagesUrl: pages,
+    number: chapter.number,
+    title: chapter.title,
+    pagesUrl: pagesUrl,
   }}
   prevChapter={prevChapter}
   nextChapter={nextChapter}

@@ -46,17 +46,21 @@ const { pagesUrl } = Astro.props;
     currentPage.set(value);
   });
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const pageIndex = Number((entry.target as HTMLElement).dataset.page);
-          currentPage.set(pageIndex);
-          percentageRead.set((pageIndex / (pages.length - 1)) * 100);
+  window.addEventListener("scroll", () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const middlePoint = scrollTop + windowHeight / 2;
+
+    pages.forEach((page, index) => {
+      const rect = page.getBoundingClientRect();
+      const pageMiddle = rect.top + window.scrollY + rect.height / 2;
+
+      if (Math.abs(middlePoint - pageMiddle) < rect.height / 2) {
+        if (currentPage.get() !== index) {
+          currentPage.set(index);
+          percentageRead.set((index / (pages.length - 1)) * 100);
         }
-      });
-    },
-    { threshold: 0.6 },
-  );
-  pages.forEach((page) => observer.observe(page));
+      }
+    });
+  });
 </script>

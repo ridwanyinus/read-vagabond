@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
-import { getVolumes, getMetadata } from "../lib/db";
+import { getDb } from "../db/client";
+import { getMangaVolumes } from "../lib/db";
 
 interface SitemapUrl {
   loc: string;
@@ -9,14 +10,13 @@ interface SitemapUrl {
 }
 
 export const GET: APIRoute = async ({ locals }) => {
-  const db = locals.runtime?.env?.vagabond_db;
+  const db = getDb(locals.runtime.env.bagabondo_db);
   if (!db) {
     return new Response("Database not configured", { status: 500 });
   }
 
   const siteUrl = "https://readbagabondo.com";
-  const metadata = await getMetadata(db);
-  const volumes = await getVolumes(db);
+  const volumes = await getMangaVolumes(db);
 
   const urls: SitemapUrl[] = [];
 
@@ -31,16 +31,23 @@ export const GET: APIRoute = async ({ locals }) => {
   // Volume pages
   for (const volume of volumes) {
     urls.push({
-      loc: `${siteUrl}/volume-${volume.volume}`,
+      loc: `${siteUrl}/volume-${volume.number}`,
       lastmod: new Date().toISOString().split("T")[0],
       changefreq: "monthly",
       priority: "0.8",
     });
 
+    const firstChapter = volume.firstChapter;
+    const lastChapter = volume.lastChapter;
+
+    if (firstChapter == null || lastChapter == null) {
+      continue;
+    }
+
     // Chapter pages for this volume
-    for (let i = volume.first_chapter; i <= volume.last_chapter; i++) {
+    for (let i = firstChapter; i <= lastChapter; i++) {
       urls.push({
-        loc: `${siteUrl}/volume-${volume.volume}/chapter-${i}`,
+        loc: `${siteUrl}/volume-${volume.number}/chapter-${i}`,
         lastmod: new Date().toISOString().split("T")[0],
         changefreq: "monthly",
         priority: "0.7",

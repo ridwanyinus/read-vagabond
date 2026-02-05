@@ -1,4 +1,4 @@
-import { sql, eq, asc, count, countDistinct, min, max } from "drizzle-orm";
+import { sql, eq, asc, countDistinct, min, max } from "drizzle-orm";
 import { chaptersTable, volumesTable } from "../db/schema";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 

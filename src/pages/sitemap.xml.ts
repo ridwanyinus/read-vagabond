@@ -1,5 +1,5 @@
-import { getDb } from "../db/client";
 import type { APIRoute } from "astro";
+import { getDb } from "../db/client";
 import { getMangaVolumes } from "../lib/db";
 
 interface SitemapUrl {

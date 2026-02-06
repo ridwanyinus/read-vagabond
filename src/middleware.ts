@@ -56,6 +56,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
     );
   }
 
-  await cache.put(context.url.href, newResponse.clone() as any);
+  context.locals.runtime.ctx.waitUntil(
+    cache.put(context.url.href, newResponse.clone() as any),
+  );
   return newResponse;
 });

@@ -34,7 +34,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     // 1 week
     newResponse.headers.set(
       "Cache-Control",
-      "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800",
+      "public, max-age=604800, s-maxage=604800, stale-while-revalidate=604800",
     );
   } else if (context.url.pathname.includes("/chapter-")) {
     // 1 month
@@ -52,7 +52,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     // 1 week
     newResponse.headers.set(
       "Cache-Control",
-      "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800",
+      "public, max-age=604800, s-maxage=604800, stale-while-revalidate=604800",
     );
   }
 

@@ -1,1 +1,1 @@
-Deprecated. Just for refence. Moved to public bucket.
+Deprecated. Just for reference. Moved to public bucket.

@@ -11,14 +11,16 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   const cache = context.locals.runtime.caches.default;
 
-  const cachedResponse = await cache.match(context.url.href);
-  if (cachedResponse) {
-    return new Response(cachedResponse.body as any, {
-      status: cachedResponse.status,
-      statusText: cachedResponse.statusText,
-      headers: new Headers(cachedResponse.headers as any),
-    });
-  }
+  try {
+    const cachedResponse = await cache.match(context.url.href);
+    if (cachedResponse) {
+      return new Response(cachedResponse.body as any, {
+        status: cachedResponse.status,
+        statusText: cachedResponse.statusText,
+        headers: new Headers(cachedResponse.headers as any),
+      });
+    }
+  } catch (error) {}
 
   const response = await next();
 

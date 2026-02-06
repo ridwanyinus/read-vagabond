@@ -5,6 +5,10 @@ import { defineMiddleware } from "astro:middleware";
 // We can also set different cache durations for different types of content (e.g., longer for chapter pages, shorter for the homepage).
 
 export const onRequest = defineMiddleware(async (context, next) => {
+  if (context.request.method !== "GET") {
+    return next();
+  }
+
   const cache = context.locals.runtime.caches.default;
 
   const cachedResponse = await cache.match(context.url.href);

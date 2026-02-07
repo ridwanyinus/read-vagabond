@@ -18,6 +18,10 @@ if (!db) {
 }
 
 const volume = await getMangaVolumeById(db, +volumeId);
+if (!volume) {
+  return Astro.redirect("/");
+}
+
 const chaptersFromVolume = await getMangaChaptersByVolumeId(db, +volumeId);
 ---
 

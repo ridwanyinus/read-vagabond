@@ -21,6 +21,10 @@ const chapter = await getMangaChapterById(db, +chapterId);
 const firstChapter = volume.firstChapter ?? 0;
 const lastChapter = volume.lastChapter ?? 0;
 
+if (chapter.number > lastChapter || chapter.number < firstChapter) {
+  return Astro.redirect(`/volume-${volumeId}`);
+}
+
 const prevChapter = chapter.number > firstChapter ? chapter.number - 1 : null;
 const nextChapter = chapter.number < lastChapter ? chapter.number + 1 : null;
 

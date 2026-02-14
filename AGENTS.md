@@ -309,3 +309,89 @@ Custom TypeScript definitions for Cloudflare Workers and Astro runtime:
 - **Monitoring**: Check Cloudflare Analytics for performance metrics
 - **Configuration**: Keep wrangler.jsonc in sync with production settings
 - **No manual deployment needed**: Cloudflare Workers handles all production infrastructure
+
+## Development Workflow
+
+### Trunk-Based Development
+
+This project uses trunk-based development with `main` as the primary branch:
+
+- All feature branches are created from `main`
+- All PRs merge directly to `main`
+- Every merge to `main` triggers automatic production deployment
+- No long-lived development branches
+
+**Branch strategy**:
+
+- `main`: Production trunk (all development happens here)
+- `feat/*`: Short-lived feature branches
+- `fix/*`: Short-lived bug fix branches
+- `mihon-api-v2/*`: Short-lived API v2 feature branches
+- `docs/*`: Documentation update branches
+
+**Workflow**:
+
+1. Create feature branch from `main`
+2. Develop and test locally
+3. Open PR targeting `main`
+4. CodeRabbit reviews + Cloudflare build checks
+5. Maintainer approval required
+6. Merge to `main` → automatic deployment
+
+### Feature Flags
+
+For incomplete or risky features that need to be merged before they're user-ready:
+
+**Implementation**:
+
+```typescript
+const ENABLE_FEATURE = import.meta.env.PUBLIC_ENABLE_FEATURE === "true";
+
+if (ENABLE_FEATURE) {
+  // Feature code
+}
+```
+
+**Usage**:
+
+- Use environment variables to toggle features
+- Keep features disabled in production until thoroughly tested
+- Deploy code to `main` but activate only when ready
+- Ideal for: large features requiring multiple PRs, A/B testing, gradual rollouts
+
+### Breaking Changes
+
+When implementing breaking API changes:
+
+- Version API endpoints (`/api/v1/`, `/api/v2/`)
+- Document all breaking changes in PR description
+- Provide migration guide for external integrations
+- Notify external integration maintainers (Keiyoushi extension)
+- Require maintainer approval for database schema changes
+
+### PR Testing
+
+**Local testing** (test your own changes):
+
+```bash
+pnpm dev                      # Astro dev server
+pnpm wrangler dev             # Cloudflare Workers runtime
+pnpm build && pnpm preview    # Production build
+```
+
+**Testing others' PRs** (for code review):
+
+```bash
+# Using GitHub CLI
+gh pr checkout <pr-number>
+
+# Or manually
+git fetch origin pull/<pr-number>/head:pr-<pr-number>
+git checkout pr-<pr-number>
+
+# Then test
+pnpm install
+pnpm dev
+```
+
+**All merges require**: CodeRabbit review passed + Cloudflare build successful + maintainer approval.

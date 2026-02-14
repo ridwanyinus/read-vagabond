@@ -7,9 +7,9 @@ import {
 } from "../../../lib/db";
 import { buildPageUrl } from "../../../lib/page";
 
-const { volume: volumeId, chapter: chapterNumber } = Astro.params;
+const { volume: volumeNumber, chapter: chapterNumber } = Astro.params;
 
-if (!volumeId || !chapterNumber) {
+if (!volumeNumber || !chapterNumber) {
   return Astro.redirect("/");
 }
 
@@ -18,7 +18,7 @@ if (!db) {
   throw new Error("Database not configured");
 }
 
-const volume = await getMangaVolumeByNumber(db, +volumeId);
+const volume = await getMangaVolumeByNumber(db, +volumeNumber);
 if (!volume) {
   return Astro.redirect("/");
 }

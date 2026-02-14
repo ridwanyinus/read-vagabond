@@ -1,12 +1,15 @@
 ---
 import ChapterLayout from "../../../layouts/ChapterLayout.astro";
 import { getDb } from "../../../db/client";
-import { getMangaVolumeById, getMangaChapterById } from "../../../lib/db";
+import {
+  getMangaVolumeByNumber,
+  getMangaChapterByNumber,
+} from "../../../lib/db";
 import { buildPageUrl } from "../../../lib/page";
 
-const { volume: volumeId, chapter: chapterId } = Astro.params;
+const { volume: volumeNumber, chapter: chapterNumber } = Astro.params;
 
-if (!volumeId || !chapterId) {
+if (!volumeNumber || !chapterNumber) {
   return Astro.redirect("/");
 }
 
@@ -15,14 +18,14 @@ if (!db) {
   throw new Error("Database not configured");
 }
 
-const volume = await getMangaVolumeById(db, +volumeId);
-const chapter = await getMangaChapterById(db, +chapterId);
+const volume = await getMangaVolumeByNumber(db, +volumeNumber);
+const chapter = await getMangaChapterByNumber(db, +chapterNumber);
 
 const firstChapter = volume.firstChapter ?? 0;
 const lastChapter = volume.lastChapter ?? 0;
 
 if (chapter.number > lastChapter || chapter.number < firstChapter) {
-  return Astro.redirect(`/volume-${volumeId}`);
+  return Astro.redirect(`/volume-${volumeNumber}`);
 }
 
 const prevChapter = chapter.number > firstChapter ? chapter.number - 1 : null;
@@ -30,7 +33,7 @@ const nextChapter = chapter.number < lastChapter ? chapter.number + 1 : null;
 
 const pagesUrl = Array.from({ length: chapter.pageCount }, (_, i) =>
   buildPageUrl({
-    volume: +volumeId,
+    volume: +volumeNumber,
     chapter: chapter.number,
     page: i + 1,
   }),
@@ -38,20 +41,20 @@ const pagesUrl = Array.from({ length: chapter.pageCount }, (_, i) =>
 ---
 
 <ChapterLayout
-  tagline={`Volume ${volumeId} - Chapter ${chapter.number} - ${chapter.title}`}
+  tagline={`Volume ${volumeNumber} - Chapter ${chapter.number} - ${chapter.title}`}
   metadata={{
-    title: `Read Vagabond Manga | Volume ${volumeId} - Chapter ${chapter.number} - ${chapter.title}`,
+    title: `Read Vagabond Manga | Volume ${volumeNumber} - Chapter ${chapter.number} - ${chapter.title}`,
     description: `Read Vagabond Chapter ${chapter.number}: ${chapter.title} online for free. ${chapter.pageCount} pages of high-quality manga from Takehiko Inoue's masterpiece.`,
     keywords: [
       `Vagabond Chapter ${chapter.number}`,
       `${chapter.title}`,
       "read manga online",
       "Takehiko Inoue",
-      `Vagabond Volume ${volumeId}`,
+      `Vagabond Volume ${volumeNumber}`,
     ],
-    endpoint: `/volume-${volumeId}/chapter-${chapter.number}`,
+    endpoint: `/volume-${volumeNumber}/chapter-${chapter.number}`,
   }}
-  volume={+volumeId}
+  volume={+volumeNumber}
   chapter={{
     number: chapter.number,
     title: chapter.title,

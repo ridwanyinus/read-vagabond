@@ -12,12 +12,12 @@ Read Vagabond Manga is a manga reader web application for Takehiko Inoue's maste
 
 ## Current Development Priorities
 
-### Major Feature Development (targeting `dev` branch)
+### Major Feature Development
 
 We're actively working on these high-impact features:
 
-1. **Single Page Reader with LTR/RTL Navigation**
-   - Replace current vertical cascade layout with single-page horizontal navigation
+1. **Single Page Reader (Alternative Reading Mode)**
+   - Implement single-page horizontal navigation as an alternative to current cascade layout
    - Canvas-based rendering with smooth page flip transitions
    - Thumbnail navigation sidebar/bottom panel
    - Reading progress indicator adapted for single-page navigation
@@ -44,9 +44,9 @@ We're actively working on these high-impact features:
 
 ### Mihon API Modernization
 
-- **Current Status**: Mihon API v1 is being sunsetted with limitations and workarounds
-- **Timeline**: 1-2 months for complete transition to Mihon API v2
-- **Current Target**: All API improvements target `feat/mihon-api-v2` branch
+- **Current Status**: Mihon API v1 is in production and will be deprecated
+- **Next Phase**: Mihon API v2 is in design/thinking phase (not yet implemented)
+- **Breaking Changes**: v2 will introduce breaking changes; Keiyoushi extension will need updates
 
 ## Getting Started
 
@@ -69,25 +69,25 @@ cd read-vagabond
 pnpm install
 
 # 4. Set up local D1 database (required for development)
-# The database will be created locally and persisted in .wrangler/state
-pnpm wrangler d1 execute bagabondo-db --local --file=./drizzle/migrations/0000_complex_mimic.sql
-pnpm wrangler d1 execute bagabondo-db --local --file=./seeds/0000_seed_from_legacy.sql
+# Run all migrations first, then all seeds
+for migration in drizzle/migrations/*.sql; do
+  pnpm wrangler d1 execute bagabondo-db --local --file="$migration"
+done
+for seed in seeds/*.sql; do
+  pnpm wrangler d1 execute bagabondo-db --local --file="$seed"
+done
 
-# 5. Checkout appropriate branch for your contribution
-git checkout dev  # All current contributions target dev branch
+# 5. Create a feature branch from main
+git checkout main
+git pull origin main
+git checkout -b feat/your-feature-name
+# Examples:
+# git checkout -b feat/single-page-reader
+# git checkout -b feat/dark-mode
+# git checkout -b fix/reading-progress
+# git checkout -b mihon-api-v2/new-endpoints
 
-# 6. Create feat branch
-# For features:
-git checkout -b feat/single-page-reader
-git checkout -b feat/dark-mode
-git checkout -b feat/comment-system
-git checkout -b feat/chapter-selection
-
-# For API work:
-git checkout -b mihon-api-v2/infrastructure
-git checkout -b mihon-api-v2/endpoints
-
-# 7. Start development server
+# 6. Start development server
 pnpm dev               # Local development server with D1 database
 pnpm wrangler dev      # Local development with Workers runtime and D1 database
 ```
@@ -97,9 +97,10 @@ pnpm wrangler dev      # Local development with Workers runtime and D1 database
 The application uses Cloudflare D1 database for storing chapter metadata. For local development:
 
 - **Local Database**: Runs in memory using `wrangler d1 execute --local`
-- **Database Files**: Migrations are in the `migrations/` directory
+- **Database Files**: Migrations are in the `drizzle/migrations/` directory, seeds in `seeds/`
 - **Database Name**: `bagabondo-db` (configured in `wrangler.jsonc`)
 - **Persistence**: Local database state is stored in `.wrangler/state/` directory
+- **Note**: Database is transitioning from `vagabond_db` to `bagabondo_db`; API currently uses legacy `vagabond_db` (temporary during migration)
 
 **Running Migrations**:
 
@@ -162,8 +163,8 @@ pnpm wrangler whoami    # Verify authentication
 
 ### Single Page Reader Implementation
 
-**Current State**: Vertical cascade layout with all pages stacked
-**Target State**: Single page horizontal navigation with LTR/RTL support
+**Current State**: Vertical cascade layout with continuous scrolling (default reader)
+**Target State**: Single page horizontal navigation as optional alternative mode with LTR/RTL support
 
 **Technical Requirements**:
 
@@ -245,42 +246,116 @@ pnpm wrangler whoami    # Verify authentication
 - Support for multi-language/localization
 - Integration with manga reader applications
 
+**Note**: v2 is currently in design/thinking phase. Once specification is complete, API will be refactored as a short-lived feature branch merged to `main`.
+
 ## Branch Strategy & Submission Process
+
+### Trunk-Based Development
+
+This project uses **trunk-based development** with `main` as the primary development branch:
+
+- `main`: Primary development trunk (auto-deploys to production on merge)
+- Feature branches: Short-lived, created from and merged directly to `main`
+- No long-lived development branches
 
 ### Branch Structure
 
-- `main`: Stable production (auto-deploys to Cloudflare)
-- `dev`: All development work (features + API v2)
-- `feat/mihon-api-v2`: Future dedicated API branch (currently in idea phase)
-
-### Targeting Rules
-
-- **All current contributions**: Target `dev` branch
-- **Future API v2 dedicated work**: Will target `feat/mihon-api-v2` branch
+- `main`: Production trunk (all development happens here)
+- `feat/*`: Feature branches (short-lived)
+- `fix/*`: Bug fix branches (short-lived)
+- `mihon-api-v2/*`: API v2 feature branches (short-lived)
+- `docs/*`: Documentation update branches
 
 ### Branch Naming Conventions
 
-- Features: `feat/single-page-reader`, `feat/dark-mode`
-- API work: `mihon-api-v2/infrastructure`, `mihon-api-v2/endpoints`
-- Bug fixes: `fix/reading-progress`, `fix/navigation-issue`
+- Features: `feat/single-page-reader`, `feat/dark-mode`, `feat/comment-system`
+- **Breaking API changes**: Follow breaking changes policy (see above)
+- **Version API endpoints**: Use `/api/v1/`, `/api/v2/` for breaking changes
+
+### Hotfixes & Bug Resolution
+
+**If a bug is discovered in production after merge**:
+
+1. **Create hotfix branch from `main`**:
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout -b fix/critical-bug-name
+   ```
+2. **Fix the issue** with minimal changes
+3. **Open PR targeting `main`** with `[HOTFIX]` prefix in title
+4. **Fast-track review** by maintainer
+5. **Merge and auto-deploy** to production
+
+**Forward-fix strategy**: We fix forward, not rollback. Cloudflare deployments are fast enough to patch issues quickly.
+
+**For critical production outages**: Maintainer may manually rollback via Cloudflare dashboard while hotfix is prepared.
+
+- Bug fixes: `fix/reading-progress`, `fix/navigation-issue`, `fix/cache-headers`
+- API work: `mihon-api-v2/endpoints`, `mihon-api-v2/schema`, `mihon-api-v2/localization`
+- Documentation: `docs/update-contributing`, `docs/api-migration-guide`
 
 ### Pull Request Workflow
 
-1. Fork the repository
-2. Clone your fork locally
-3. Checkout `dev` branch
-4. Create feature branch with proper naming convention
-5. Develop and test your changes
-6. Open pull request targeting `dev` branch
-7. Code review and merge process
-8. `dev` to `main` merge triggers automatic Cloudflare deployment
+1. **Fork the repository**
+2. **Clone your fork locally**
+3. **Create feature branch from `main`**:
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout -b feat/your-feature-name
+   ```
+4. **Develop and test your changes locally**
+5. **Push to your fork**: `git push origin feat/your-feature-name`
+6. **Open pull request targeting `main` branch**
+7. **CodeRabbit automatically reviews your PR**
+8. **Cloudflare builds check passes**
+9. **Address review feedback**
+10. **Maintainer approves PR** (after CodeRabbit review + passing Cloudflare build)
+11. **Merge to `main`** → automatic production deployment
+
+### Testing Your PR
+
+**Local Testing** (required before opening PR):
+
+```bash
+pnpm dev                      # Test locally with Astro dev server
+pnpm wrangler dev             # Test with Cloudflare Workers runtime
+pnpm build && pnpm preview    # Test production build locally
+```
+
+**Testing Others' PRs** (for reviewers and contributors):
+
+```bash
+# Using GitHub CLI
+gh pr checkout <pr-number>
+
+# Or manually
+git fetch origin pull/<pr-number>/head:pr-<pr-number>
+git checkout pr-<pr-number>
+
+# Then test locally
+pnpm install
+pnpm dev
+```
+
+### Merge Requirements
+
+Before a PR can be merged to `main`:
+
+1. **CodeRabbit review passed** (automated)
+2. **Cloudflare build successful** (automated)
+3. **Maintainer approval** (manual)
+4. **No merge conflicts with main**
+
+**All checks must pass** - no manual override for failed builds.
 
 ### Merge Strategy
 
-- Current: All work merges to `dev`
-- Future: Once Mihon API v2 is complete and `feat/mihon-api-v2` branch is active:
-  - Mihon API v2 branch will be merged back to `dev` for integration
-  - Then `dev` to `main` for automatic Cloudflare deployment
+- **All work merges directly to `main`**
+- **Every merge to `main` = production deployment** (automatic via Cloudflare)
+- **Short-lived feature branches** - merge within days, not weeks
+- **Small, incremental PRs preferred** over large, long-lived branches
 
 ## Technical Guidelines
 
@@ -413,11 +488,11 @@ Closes #123, Related to #456, or "None"
 ```markdown
 ## Problem/Motivation
 
-Users currently cannot switch between chapters without returning to volume page, creating a poor reading experience.
+Users currently need to navigate back to the volume page to switch chapters while reading. This PR adds chapter navigation directly in the reader interface.
 
 ## Implementation
 
-Added chapter selection dropdown in reader sidebar that:
+Implemented chapter dropdown navigation in reader sidebar that:
 
 - Fetches all chapters from current volume
 - Maintains current reading position
@@ -517,17 +592,18 @@ Before submitting a PR, please ensure:
 
 ## Deployment Process
 
-### Automated Cloudflare Deployment
+### Automatic Cloudflare Deployment
 
-- **Trigger**: Any new commit to `main` branch
-- **Process**: Automatic deployment via Cloudflare Pages/Workers integration
-- **No manual deployment needed**: Cloudflare handles production deployment automatically
+- **Trigger**: Any merge to `main` branch
+- **Process**: Cloudflare automatically deploys to production
+- **No manual steps required**: Cloudflare Workers handles all deployment infrastructure
+- **Timeline**: Deployment completes within seconds of merge
 
 ### Development Deployment Flow
 
 1. **Development**: `pnpm dev` for local Astro development
 2. **Workers Testing**: `wrangler dev` for Cloudflare Workers runtime testing
-3. **Production**: Merge `dev` to `main` triggers automatic Cloudflare deployment
+3. **Production**: Merge to `main` triggers automatic Cloudflare deployment
 
 ## Community & Support
 

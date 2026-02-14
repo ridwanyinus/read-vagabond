@@ -16,8 +16,8 @@ Read Vagabond Manga is a manga reader web application for Takehiko Inoue's maste
 
 We're actively working on these high-impact features:
 
-1. **Single Page Reader with LTR/RTL Navigation**
-   - Replace current vertical cascade layout with single-page horizontal navigation
+1. **Single Page Reader (Alternative Reading Mode)**
+   - Implement single-page horizontal navigation as an alternative to current cascade layout
    - Canvas-based rendering with smooth page flip transitions
    - Thumbnail navigation sidebar/bottom panel
    - Reading progress indicator adapted for single-page navigation
@@ -44,9 +44,9 @@ We're actively working on these high-impact features:
 
 ### Mihon API Modernization
 
-- **Current Status**: Mihon API v1 is being sunsetted with limitations and workarounds
-- **Timeline**: 1-2 months for complete transition to Mihon API v2
-- **Current Target**: All API improvements target `feat/mihon-api-v2` branch
+- **Current Status**: Mihon API v1 is in production and will be deprecated
+- **Next Phase**: Mihon API v2 is in design/thinking phase (not yet implemented)
+- **Current Target**: Focus on main app features; API v2 work pending design completion
 
 ## Getting Started
 
@@ -69,9 +69,13 @@ cd read-vagabond
 pnpm install
 
 # 4. Set up local D1 database (required for development)
-# The database will be created locally and persisted in .wrangler/state
-pnpm wrangler d1 execute bagabondo-db --local --file=./drizzle/migrations/0000_complex_mimic.sql
-pnpm wrangler d1 execute bagabondo-db --local --file=./seeds/0000_seed_from_legacy.sql
+# Run all migrations first, then all seeds
+for migration in drizzle/migrations/*.sql; do
+  pnpm wrangler d1 execute bagabondo-db --local --file="$migration"
+done
+for seed in seeds/*.sql; do
+  pnpm wrangler d1 execute bagabondo-db --local --file="$seed"
+done
 
 # 5. Checkout appropriate branch for your contribution
 git checkout dev  # All current contributions target dev branch
@@ -97,9 +101,10 @@ pnpm wrangler dev      # Local development with Workers runtime and D1 database
 The application uses Cloudflare D1 database for storing chapter metadata. For local development:
 
 - **Local Database**: Runs in memory using `wrangler d1 execute --local`
-- **Database Files**: Migrations are in the `migrations/` directory
+- **Database Files**: Migrations are in the `drizzle/migrations/` directory, seeds in `seeds/`
 - **Database Name**: `bagabondo-db` (configured in `wrangler.jsonc`)
 - **Persistence**: Local database state is stored in `.wrangler/state/` directory
+- **Note**: Database is transitioning from `vagabond_db` to `bagabondo_db`; API currently uses legacy `vagabond_db` (temporary during migration)
 
 **Running Migrations**:
 
@@ -162,8 +167,8 @@ pnpm wrangler whoami    # Verify authentication
 
 ### Single Page Reader Implementation
 
-**Current State**: Vertical cascade layout with all pages stacked
-**Target State**: Single page horizontal navigation with LTR/RTL support
+**Current State**: Vertical cascade layout with continuous scrolling (default reader)
+**Target State**: Single page horizontal navigation as optional alternative mode with LTR/RTL support
 
 **Technical Requirements**:
 
@@ -278,8 +283,9 @@ pnpm wrangler whoami    # Verify authentication
 ### Merge Strategy
 
 - Current: All work merges to `dev`
-- Future: Once Mihon API v2 is complete and `feat/mihon-api-v2` branch is active:
-  - Mihon API v2 branch will be merged back to `dev` for integration
+- Future: Once Mihon API v2 design is finalized:
+  - API v2 implementation will target `feat/mihon-api-v2` branch
+  - Branch will be merged back to `dev` for integration
   - Then `dev` to `main` for automatic Cloudflare deployment
 
 ## Technical Guidelines
@@ -517,11 +523,12 @@ Before submitting a PR, please ensure:
 
 ## Deployment Process
 
-### Automated Cloudflare Deployment
+### Automatic Cloudflare Deployment
 
-- **Trigger**: Any new commit to `main` branch
-- **Process**: Automatic deployment via Cloudflare Pages/Workers integration
-- **No manual deployment needed**: Cloudflare handles production deployment automatically
+- **Trigger**: Any merge to `main` branch
+- **Process**: Cloudflare automatically deploys to production
+- **No manual steps required**: Cloudflare Workers handles all deployment infrastructure
+- **Timeline**: Deployment completes within seconds of merge
 
 ### Development Deployment Flow
 

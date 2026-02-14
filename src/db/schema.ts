@@ -1,10 +1,10 @@
 import { sql } from "drizzle-orm";
 import {
+  index,
   integer,
   sqliteTable,
   text,
   unique,
-  uniqueIndex,
 } from "drizzle-orm/sqlite-core";
 
 export const authorsTable = sqliteTable("authors", {
@@ -50,7 +50,7 @@ export const volumesTable = sqliteTable(
   },
   (table) => [
     unique().on(table.mangaId, table.number),
-    uniqueIndex("volumes_number_idx").on(table.number),
+    index("volumes_number_idx").on(table.number),
   ],
 );
 
@@ -74,6 +74,6 @@ export const chaptersTable = sqliteTable(
   },
   (table) => [
     unique().on(table.volumeId, table.number),
-    uniqueIndex("chapters_number_idx").on(table.number),
+    index("chapters_number_idx").on(table.number),
   ],
 );

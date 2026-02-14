@@ -4,11 +4,14 @@ import VolumeCover from "../../components/VolumeCover.astro";
 import VolumeInformation from "../../components/VolumeInformation.astro";
 import MainLayout from "../../layouts/MainLayout.astro";
 import { getDb } from "../../db/client";
-import { getMangaVolumeById, getMangaChaptersByVolumeId } from "../../lib/db";
+import {
+  getMangaChaptersByVolumeNumber,
+  getMangaVolumeByNumber,
+} from "../../lib/db";
 
-const { volume: volumeId } = Astro.params;
+const { volume: volumeNumber } = Astro.params;
 
-if (!volumeId) {
+if (!volumeNumber) {
   return Astro.redirect("/");
 }
 
@@ -17,12 +20,15 @@ if (!db) {
   throw new Error("Database not configured");
 }
 
-const volume = await getMangaVolumeById(db, +volumeId);
+const volume = await getMangaVolumeByNumber(db, +volumeNumber);
 if (!volume) {
   return Astro.redirect("/");
 }
 
-const chaptersFromVolume = await getMangaChaptersByVolumeId(db, +volumeId);
+const chaptersFromVolume = await getMangaChaptersByVolumeNumber(
+  db,
+  +volumeNumber,
+);
 ---
 
 <MainLayout

@@ -1,5 +1,11 @@
 import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
+import {
+  index,
+  integer,
+  sqliteTable,
+  text,
+  unique,
+} from "drizzle-orm/sqlite-core";
 
 export const authorsTable = sqliteTable("authors", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -42,7 +48,10 @@ export const volumesTable = sqliteTable(
       .notNull()
       .default(sql`(unixepoch())`),
   },
-  (table) => [unique().on(table.mangaId, table.number)],
+  (table) => [
+    unique().on(table.mangaId, table.number),
+    index("volumes_number_idx").on(table.number),
+  ],
 );
 
 export const chaptersTable = sqliteTable(
@@ -63,5 +72,8 @@ export const chaptersTable = sqliteTable(
       .notNull()
       .default(sql`(unixepoch())`),
   },
-  (table) => [unique().on(table.volumeId, table.number)],
+  (table) => [
+    unique().on(table.volumeId, table.number),
+    index("chapters_number_idx").on(table.number),
+  ],
 );

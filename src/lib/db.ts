@@ -49,6 +49,25 @@ export const getMangaVolumeById = async (
   return data[0];
 };
 
+export const getMangaVolumeByNumber = async (
+  db: DrizzleD1Database,
+  volumeNumber: number,
+) => {
+  const data = await db
+    .select({
+      number: volumesTable.number,
+      releaseDate: min(chaptersTable.releaseDate).as("releaseDate"),
+      chapterCount: countDistinct(chaptersTable.number).as("chapterCount"),
+      firstChapter: min(chaptersTable.number).as("firstChapter"),
+      lastChapter: max(chaptersTable.number).as("lastChapter"),
+    })
+    .from(volumesTable)
+    .innerJoin(chaptersTable, eq(chaptersTable.volumeId, volumesTable.id))
+    .where(eq(volumesTable.number, volumeNumber))
+    .groupBy(volumesTable.id, volumesTable.number);
+  return data[0];
+};
+
 export const getMangaChaptersByVolumeId = async (
   db: DrizzleD1Database,
   volumeId: number,
@@ -61,6 +80,23 @@ export const getMangaChaptersByVolumeId = async (
     })
     .from(chaptersTable)
     .where(eq(chaptersTable.volumeId, volumeId))
+    .orderBy(asc(chaptersTable.number));
+  return data;
+};
+
+export const getMangaChaptersByVolumeNumber = async (
+  db: DrizzleD1Database,
+  volumeNumber: number,
+) => {
+  const data = await db
+    .select({
+      number: chaptersTable.number,
+      title: chaptersTable.title,
+      releaseDate: chaptersTable.releaseDate,
+    })
+    .from(chaptersTable)
+    .innerJoin(volumesTable, eq(volumesTable.id, chaptersTable.volumeId))
+    .where(eq(volumesTable.number, volumeNumber))
     .orderBy(asc(chaptersTable.number));
   return data;
 };
@@ -78,5 +114,21 @@ export const getMangaChapterById = async (
     })
     .from(chaptersTable)
     .where(eq(chaptersTable.id, chapterId));
+  return data[0];
+};
+
+export const getMangaChapterByNumber = async (
+  db: DrizzleD1Database,
+  chapterNumber: number,
+) => {
+  const data = await db
+    .select({
+      title: chaptersTable.title,
+      number: chaptersTable.number,
+      pageCount: chaptersTable.pageCount,
+      releaseDate: chaptersTable.releaseDate,
+    })
+    .from(chaptersTable)
+    .where(eq(chaptersTable.number, chapterNumber));
   return data[0];
 };

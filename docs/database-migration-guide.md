@@ -127,6 +127,7 @@ pnpm wrangler d1 execute bagabondo-db --file=./seeds/0000_seed_from_legacy.sql
 pnpm wrangler d1 execute bagabondo-db --file=./drizzle/migrations/0002_aspiring_thena.sql
 pnpm wrangler d1 execute bagabondo-db --file=./seeds/0001_update_manga_id_in_chapters.sql
 pnpm wrangler d1 execute bagabondo-db --file=./drizzle/migrations/0003_conscious_marvel_apes.sql
+pnpm wrangler d1 execute bagabondo-db --file=./drizzle/migrations/0004_mighty_banshee.sql
 ```
 
 ### Step 2: Verify Migration
